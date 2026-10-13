@@ -45,6 +45,10 @@ module load_unit
     input lsu_ctrl_t lsu_ctrl_i,
     // index of the load instr in the load queue - LOAD_UNIT
     input logic [$clog2(CVA6Cfg.NrLSQEntries)-1:0] ld_unit_idx_i,
+    // a speculative load needs to be canceled
+    input logic [CVA6Cfg.NrLSQEntries-1:0]                                      ld_unit_canceled_i,
+    // id of the speculative load to cancel
+    input logic [CVA6Cfg.NrLSQEntries-1:0][CVA6Cfg.TRANS_ID_BITS-1:0]         ld_unit_canceled_id_i,
     // Pop the load request from the LSU bypass FIFO - LOAD_STORE_QUEUE
     output logic pop_ld_o,
     // Load unit result is valid - ISSUE_STAGE
@@ -138,9 +142,11 @@ module load_unit
   always_comb begin
     ldbuf_rollback_mask = '0;
 
+    // rollback mask in case of branch miss or speculative load
     for (int unsigned i = 0; i < CVA6Cfg.NrLoadBufEntries; i++) begin
       for (int unsigned j = 0; j < CVA6Cfg.RollbackWidth; j++) begin
-        if (ldbuf_valid_q[i] && rollback_i[j] && ldbuf_q[i].trans_id == rollback_trans_id_i[j]) begin
+        if ((ldbuf_valid_q[i] && rollback_i[j] && ldbuf_q[i].trans_id == rollback_trans_id_i[j])
+          || (ldbuf_valid_q[i] && ld_unit_canceled_i[j] && ldbuf_q[i].trans_id == ld_unit_canceled_id_i[j])) begin
           ldbuf_rollback_mask[i] = 1'b1;
         end
       end
@@ -152,8 +158,10 @@ module load_unit
   always_comb begin
     ldbuf_w_rollback = 1'b0;
 
+    // rollback mask in case of branch miss or speculative load
     for (int unsigned j = 0; j < CVA6Cfg.RollbackWidth; j++) begin
-      if (rollback_i[j] & ldbuf_wdata.trans_id == rollback_trans_id_i[j]) begin
+      if ((rollback_i[j] & ldbuf_wdata.trans_id == rollback_trans_id_i[j])
+        || (ld_unit_canceled_i[j] & ldbuf_wdata.trans_id == ld_unit_canceled_id_i[j])) begin
         ldbuf_w_rollback = 1'b1;
       end
     end
@@ -293,7 +301,8 @@ module load_unit
 
     // In case of rollback we change the FSM state
     for (int unsigned i = 0 ; i<CVA6Cfg.RollbackWidth ; i++) begin
-      if (rollback_i[i] && rollback_trans_id_i[i] == lsu_ctrl_i.trans_id && lsu_ctrl_i.valid) begin
+      if ((rollback_i[i] && rollback_trans_id_i[i] == lsu_ctrl_i.trans_id && lsu_ctrl_i.valid)
+        || (ld_unit_canceled_i[i] && ld_unit_canceled_id_i[i] == lsu_ctrl_i.trans_id && lsu_ctrl_i.valid)) begin
         unique case (state_q)
           WAIT_GNT : begin
             state_d = IDLE;
