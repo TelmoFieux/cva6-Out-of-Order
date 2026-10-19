@@ -50,14 +50,14 @@ module commit_stage
     output fu_op [CVA6Cfg.NrCommitPorts-1:0] commit_op_o,
     // Acknowledge that we are indeed committing - CSR_REGFILE
     output logic [CVA6Cfg.NrCommitPorts-1:0] commit_macro_ack_o,
-    // Register file write address - ISSUE_STAGE
-    output logic [CVA6Cfg.NrCommitPorts-1:0][CVA6Cfg.RegAddrWidth-1:0] waddr_o,
     // csr write address - ISSUE_STAGE
     output logic [CVA6Cfg.RegAddrWidth-1:0] csr_waddr_o,
     // csr read data - ISSUE_STAGE
     output logic [CVA6Cfg.XLEN-1:0] csr_rdata_o,
     // Register file write enable - ISSUE_STAGE
     output logic csr_we_o,
+    // csr trans id - EX_STAGE
+    output logic [CVA6Cfg.TRANS_ID_BITS-1:0] csr_trans_id_o,
     // Result of AMO operation - CACHE
     input amo_resp_t amo_resp_i,
     // TO_BE_COMPLETED - FRONTEND_CSR_REGFILE
@@ -112,10 +112,6 @@ module commit_stage
   //     .probe9(1'b0) // input wire [0:0]  probe9
   // );
 
-  for (genvar i = 0; i < CVA6Cfg.NrCommitPorts; i++) begin : gen_waddr
-    assign waddr_o[i] = commit_instr_i[i].rd;
-  end
-
   for (genvar i = 0; i < CVA6Cfg.NrCommitPorts; i++) begin : gen_rat_info
     assign commit_old_phys_o[i] = commit_instr_i[i].old_phys;
     assign commit_new_phys_o[i] = commit_instr_i[i].rd;
@@ -152,6 +148,7 @@ module commit_stage
     csr_we_o = 1'b0;
     csr_rdata_o = {CVA6Cfg.XLEN{1'b0}};
     csr_waddr_o = '0;
+    csr_trans_id_o = '0;
 
     amo_valid_commit_o = 1'b0;
 
@@ -214,6 +211,7 @@ module commit_stage
           // write the CSR file
           csr_we_o = 1'b1;
           csr_op_o    = commit_instr_i[0].op;
+          csr_trans_id_o = commit_instr_i[0].trans_id;
           csr_wdata_o = commit_instr_i[0].result;
           csr_waddr_o = commit_instr_i[0].rd;
           if (!commit_drop_i[0]) begin

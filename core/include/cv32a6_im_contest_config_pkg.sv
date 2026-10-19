@@ -19,7 +19,7 @@ package cva6_config_pkg;
   localparam CVA6ConfigFVecEn = 0;
 
   localparam CVA6ConfigCvxifEn = 0;
-  localparam CVA6ConfigCExtEn = 1;
+  localparam CVA6ConfigCExtEn = 0;
   localparam CVA6ConfigZcbExtEn = 0;
   localparam CVA6ConfigZcmpExtEn = 0;
   localparam CVA6ConfigAExtEn = 0;
@@ -49,9 +49,9 @@ package cva6_config_pkg;
 
   localparam CVA6ConfigNrScoreboardEntries = 16;
 
-  localparam CVA6ConfigNrLoadPipeRegs = 1;
+  localparam CVA6ConfigNrLoadPipeRegs = 0;
   localparam CVA6ConfigNrStorePipeRegs = 0;
-  localparam CVA6ConfigNrLoadBufEntries = 1;
+  localparam CVA6ConfigNrLoadBufEntries = 2;
 
   localparam CVA6ConfigRASDepth = 2;
   localparam CVA6ConfigBTBEntries = 32;
@@ -71,9 +71,12 @@ package cva6_config_pkg;
 
   // OoO parameters
   localparam CVA6ConfigRegAddrWidth = 6;
-  localparam CVA6ConfigNrPhysReg = 44;
-  localparam CVA6ConfigGlobalRsIdWidth = 5;
-  localparam CVA6ConfigRollbackWidth = 4;
+  localparam CVA6ConfigNrPhysReg = 48;
+  localparam CVA6ConfigGlobalRsIdWidth = 6;
+  localparam CVA6ConfigRollbackWidth = 2;
+  // same size for store and load queue
+  localparam CVA6ConfigNrLSQEntries = 4;
+  localparam CVA6ConfigNrLSQBypassEntries = 4;
 
   localparam config_pkg::cva6_user_cfg_t cva6_cfg = '{
       XLEN: unsigned'(CVA6ConfigXlen),
@@ -81,7 +84,7 @@ package cva6_config_pkg;
       FpgaEn: bit'(1),  // for Xilinx and Altera
       FpgaAlteraEn: bit'(0),  // for Altera (only)
       TechnoCut: bit'(0),
-      SuperscalarEn: bit'(1),
+      SuperscalarEn: bit'(0),
       NrCommitPorts: unsigned'(1),
       AxiAddrWidth: unsigned'(CVA6ConfigAxiAddrWidth),
       AxiDataWidth: unsigned'(CVA6ConfigAxiDataWidth),
@@ -93,6 +96,8 @@ package cva6_config_pkg;
       NrPhysReg : unsigned'(CVA6ConfigNrPhysReg),
       GlobalRsIdWidth : unsigned'(CVA6ConfigGlobalRsIdWidth),
       RollbackWidth : unsigned'(CVA6ConfigRollbackWidth),
+      NrLSQEntries : unsigned'(CVA6ConfigNrLSQEntries),
+      NrLSQBypassEntries : unsigned'(CVA6ConfigNrLSQBypassEntries),
       CMOV: bit'(0),
       RVF: bit'(CVA6ConfigRVF),
       RVD: bit'(0),

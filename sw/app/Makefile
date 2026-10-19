@@ -50,7 +50,7 @@ bmarks = \
 	fft \
 	test_cmov \
 	bench_alu \
-	bench_alu_ILP
+	membench
 
 #--------------------------------------------------------------------
 # Build rules

@@ -93,7 +93,10 @@ if { $::env(PS7_DDR) == 1 } {
    puts "None of the values is matching"
 }
 
-set_property STEPS.SYNTH_DESIGN.ARGS.RETIMING true [get_runs synth_1]
+set_property STEPS.SYNTH_DESIGN.ARGS.GLOBAL_RETIMING on [get_runs synth_1]
+# set_property "steps.synth_design.args.directive" "AlternateRoutability" [get_runs synth_1]
+# set_property "steps.synth_design.args.directive" "PerformanceOptimized" [get_runs synth_1]
+# set_property "steps.synth_design.args.directive" "AreaOptimized_high" [get_runs synth_1]
 # set_property STEPS.SYNTH_DESIGN.ARGS.NO_LC true [get_runs synth_1]
 
 launch_runs synth_1
@@ -121,13 +124,13 @@ report_clock_interaction                                                -file re
 set_property "steps.place_design.args.directive" "ExtraTimingOpt" [get_runs impl_1]
 set_property "steps.route_design.args.directive" "Explore" [get_runs impl_1]
 
-set_property "steps.post_route_phys_opt_design.is_enabled" "1" [get_runs impl_1]
+set_property "steps.post_route_phys_opt_design.is_enabled" "0" [get_runs impl_1]
 set_property "steps.post_route_phys_opt_design.args.directive" "Explore" [get_runs impl_1]
 
 set_property "steps.phys_opt_design.is_enabled" "1" [get_runs impl_1]
 # set_property "steps.phys_opt_design.args.directive" "Explore" [get_runs impl_1]
-# set_property "steps.phys_opt_design.args.directive" "AggressiveFanoutOpt" [get_runs impl_1]
-# set_property "steps.phys_opt_design.args.directive" "Explore" [get_runs impl_1]
+set_property "steps.phys_opt_design.args.directive" "AggressiveFanoutOpt" [get_runs impl_1]
+set_property "steps.phys_opt_design.args.directive" "Explore" [get_runs impl_1]
 set_property "steps.phys_opt_design.args.directive" "AlternateFlowWithRetiming" [get_runs impl_1]
 
 ##create_clock -period $::env(CLK_PERIOD_NS) -name clk_i   [get_ports clk_i]
@@ -148,3 +151,6 @@ check_timing                                                              -file 
 report_timing -max_paths 100 -nworst 100 -delay_type max -sort_by slack   -file reports_cva6_fpga_impl/${project}.timing_WORST_100.rpt
 report_timing -nworst 1 -delay_type max -sort_by group                    -file reports_cva6_fpga_impl/${project}.timing.rpt
 report_utilization -hierarchical                                          -file reports_cva6_fpga_impl/${project}.utilization.rpt
+report_timing_summary -delay_type min_max -report_unconstrained           -file reports_cva6_fpga_impl/${project}.timing_summary.rpt
+report_methodology                                                        -file reports_cva6_fpga_impl/${project}.methodology.rpt
+report_drc -checks {LUTLP-1 TIMING-*}                                     -file reports_cva6_fpga_impl/${project}.drc.rpt

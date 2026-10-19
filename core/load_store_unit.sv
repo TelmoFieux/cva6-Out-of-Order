@@ -40,13 +40,39 @@ module load_store_unit
     // TO_BE_COMPLETED - TO_BE_COMPLETED
     input logic amo_valid_commit_i,
     // TO_BE_COMPLETED - TO_BE_COMPLETED
-    input logic [31:0] tinst_i,
+    input logic [CVA6Cfg.NrIssuePorts-1:0][31:0] tinst_i,
     // FU data needed to execute instruction - ISSUE_STAGE
-    input fu_data_t fu_data_i,
+    input fu_data_t [CVA6Cfg.NrIssuePorts-1:0] fu_data_i,
     // Load Store Unit is ready - ISSUE_STAGE
-    output logic lsu_ready_o,
+    output logic [CVA6Cfg.NrIssuePorts-1:0] lsq_full_o,
     // Load Store Unit instruction is valid - ISSUE_STAGE
-    input logic lsu_valid_i,
+    input logic [CVA6Cfg.NrIssuePorts-1:0] decoded_instr_valid_i,
+    // Load Store Unit instruction is accepted - ISSUE_STAGE
+    input logic [CVA6Cfg.NrIssuePorts-1:0] decoded_instr_ack_i,
+    // number of store queue entrie freed this cycle - ISSUE_STAGE
+    output logic [$clog2(CVA6Cfg.NrLSQEntries + 1)-1:0] st_return_token_o,
+    // Instr to write to the load queue - ISSUE_STAGE
+    input logic [CVA6Cfg.NrIssuePorts-1:0] ld_we_i,
+    // Instr to write to the store queue - ISSUE_STAGE
+    input logic [CVA6Cfg.NrIssuePorts-1:0] st_we_i,
+
+    // trans id of the producer needed by a store - ISSUE_STAGE
+    input logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.TRANS_ID_BITS-1:0] data_trans_id_i,
+    // trans id of the producer needed by a store or load - ISSUE_STAGE
+    input logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.TRANS_ID_BITS-1:0] vaddr_trans_id_i,
+    // data sent by issue stage is already valid - ISSUE_STAGE
+    input logic [CVA6Cfg.NrIssuePorts-1:0]                           st_data_valid_i,
+    // vaddr sent by issue stage is already valid - ISSUE_STAGE
+    input logic [CVA6Cfg.NrIssuePorts-1:0]                           vaddr_valid_i,
+
+
+    // Destination register in register file - EX_STAGE
+    input logic [CVA6Cfg.NrWbPorts-1:0][CVA6Cfg.TRANS_ID_BITS-1:0]    wb_trans_id_i,
+    // Results to write back - EX_STAGE
+    input logic [CVA6Cfg.NrWbPorts-1:0][CVA6Cfg.XLEN-1:0]            wbdata_i,
+    // Indicates valid results - EX_STAGE
+    input logic [CVA6Cfg.NrWbPorts-1:0]                              wt_valid_i,
+
     // do we need to rollback lsu buffer or squash load instr ? - SCOREBOARD
     input logic [CVA6Cfg.RollbackWidth-1:0] lsu_rollback_i,
     // trans if of instruction to rollback - SCOREBOARD
@@ -71,12 +97,6 @@ module load_store_unit
     output logic store_valid_o,
     // Store exception - ISSUE_STAGE
     output exception_t store_exception_o,
-    // do we need to rollback the store buffer - SCOREBOARD
-    input logic [CVA6Cfg.RollbackWidth-1:0] store_rollback_i,
-    // Has a store been dispatched ? - SCOREBOARD
-    output logic store_dispatched_o,
-    // Store dispatched trans_id - SCOREBOARD
-    output logic [CVA6Cfg.TRANS_ID_BITS-1:0] store_dispatched_id_o,
 
 
     // Commit the first pending store - TO_BE_COMPLETED
@@ -178,47 +198,30 @@ module load_store_unit
   // --------------------------------------
   // those are the signals which are always correct
   // e.g.: they keep the value in the stall case
-  lsu_ctrl_t                        lsu_ctrl;
+  lsu_ctrl_t                        lsu_ctrl, st_lsq_ctrl, ld_lsq_ctrl;
 
-  logic                             pop_st;
   logic                             pop_ld;
 
-  // ------------------------------
-  // Address Generation Unit (AGU)
-  // ------------------------------
-  // virtual address as calculated by the AGU in the first cycle
-  logic      [    CVA6Cfg.VLEN-1:0] vaddr_i;
-  logic      [    CVA6Cfg.XLEN-1:0] vaddr_xlen;
-  logic                             overflow;
-  logic                             g_overflow;
-  logic      [(CVA6Cfg.XLEN/8)-1:0] be_i;
-
-  assign vaddr_xlen = $unsigned($signed(fu_data_i.imm) + $signed(fu_data_i.operand_a));
-  assign vaddr_i = vaddr_xlen[CVA6Cfg.VLEN-1:0];
-  // we work with SV39 or SV32, so if VM is enabled, check that all bits [XLEN-1:38] or [XLEN-1:31] are equal
-  assign overflow = (CVA6Cfg.IS_XLEN64 && (!((&vaddr_xlen[CVA6Cfg.XLEN-1:CVA6Cfg.SV-1]) == 1'b1 || (|vaddr_xlen[CVA6Cfg.XLEN-1:CVA6Cfg.SV-1]) == 1'b0)));
-  if (CVA6Cfg.RVH) begin : gen_g_overflow_hyp
-    assign g_overflow = (CVA6Cfg.IS_XLEN64 && (!((|vaddr_xlen[CVA6Cfg.XLEN-1:CVA6Cfg.SVX]) == 1'b0)));
-  end else begin : gen_g_overflow_no_hyp
-    assign g_overflow = 1'b0;
-  end
 
   logic                    st_valid_i;
+  logic                    no_st_pending;
   logic                    ld_valid_i;
-  logic                    ld_translation_req;
-  logic                    st_translation_req;
-  logic [CVA6Cfg.VLEN-1:0] ld_vaddr;
-  logic [            31:0] ld_tinst;
-  logic                    ld_hs_ld_st_inst;
-  logic                    ld_hlvx_inst;
-  logic [CVA6Cfg.VLEN-1:0] st_vaddr;
-  logic [            31:0] st_tinst;
-  logic                    st_hs_ld_st_inst;
-  logic                    st_hlvx_inst;
-  logic                    translation_req;
+  logic [CVA6Cfg.VLEN-1:0] lsq_vaddr;
+  logic [            31:0] lsq_tinst;
+  logic                    lsq_hs_ld_st_inst;
+  logic                    lsq_hlvx_inst;
+  logic                    translation_req, lsq_translation_req;
   logic                    translation_valid;
+
+  logic [$clog2(CVA6Cfg.NrLSQEntries)-1:0] ld_lsq_idx_o, ld_lsq_idx_i;
+  logic [CVA6Cfg.NrLSQEntries-1:0]                              ld_unit_canceled_i;
+  logic [CVA6Cfg.NrLSQEntries-1:0][CVA6Cfg.TRANS_ID_BITS-1:0]   ld_unit_canceled_id_i;
+
+
+
+  logic                                     st_sent_to_cache;
   logic [CVA6Cfg.VLEN-1:0] mmu_vaddr;
-  logic [CVA6Cfg.PLEN-1:0] mmu_paddr, lsu_paddr;
+  logic [CVA6Cfg.PLEN-1:0] mmu_paddr, lsu_paddr, st_lsq_paddr, ld_lsq_paddr;
   logic         [                     31:0] mmu_tinst;
   logic                                     mmu_hs_ld_st_inst;
   logic                                     mmu_hlvx_inst;
@@ -228,11 +231,12 @@ module load_store_unit
   logic                                     pmp_translation_valid;
   logic                                     dtlb_hit;
   logic         [         CVA6Cfg.PPNW-1:0] dtlb_ppn;
+  logic                                     translation_type;
 
-  logic                                     ld_valid;
+  logic                                     ld_valid, ld_lsq_result_valid;
   logic         [CVA6Cfg.TRANS_ID_BITS-1:0] ld_trans_id;
   logic       [CVA6Cfg.GlobalRsIdWidth-1:0] ld_global_id;
-  logic         [         CVA6Cfg.XLEN-1:0] ld_result;
+  logic         [         CVA6Cfg.XLEN-1:0] ld_result, ld_lsq_result;
   logic                                     st_valid;
   logic         [CVA6Cfg.TRANS_ID_BITS-1:0] st_trans_id;
   logic         [         CVA6Cfg.XLEN-1:0] st_result;
@@ -244,8 +248,14 @@ module load_store_unit
   exception_t                               ld_ex;
   exception_t                               st_ex;
 
-  logic                                     hs_ld_st_inst;
-  logic                                     hlvx_inst;
+  logic                                     st_translation_req;
+  logic [CVA6Cfg.VLEN-1:0]                  pmp_lsu_vaddr;
+  logic                                     pmp_lsu_is_store;
+
+  logic [CVA6Cfg.VLEN-1:0]                  no_mmu_vaddr_q;
+  logic                                     no_mmu_is_store_q;
+  logic                                     ldbuf_full;
+
 
   logic [1:0] sum, mxr;
   logic [CVA6Cfg.PPNW-1:0] satp_ppn[2:0];
@@ -335,23 +345,38 @@ module load_store_unit
       assign pmp_icache_areq_i.fetch_paddr = CVA6Cfg.PLEN'(icache_areq_i.fetch_vaddr);
     end
     assign pmp_icache_areq_i.fetch_exception = 'h0;
+
     // dcache request without mmu for load or store,
     // Delay of 1 cycle to match MMU latency giving the address tag
     always_ff @(posedge clk_i or negedge rst_ni) begin
-      if (~rst_ni) begin
-        lsu_paddr <= '0;
-        pmp_exception <= '0;
+      if (!rst_ni) begin
+        lsu_paddr             <= '0;
+        pmp_exception         <= '0;
         pmp_translation_valid <= 1'b0;
+
+        no_mmu_vaddr_q        <= '0;
+        no_mmu_is_store_q     <= 1'b0;
+
       end else begin
-        if (CVA6Cfg.VLEN >= CVA6Cfg.PLEN) begin : gen_virtual_physical_address_lsu
-          lsu_paddr <= mmu_vaddr[CVA6Cfg.PLEN-1:0];
-        end else begin
-          lsu_paddr <= CVA6Cfg.PLEN'(mmu_vaddr);
-        end
-        pmp_exception <= misaligned_exception;
+
+        // Valid always advances.
         pmp_translation_valid <= translation_req;
+
+        if (translation_req) begin
+          if (CVA6Cfg.VLEN >= CVA6Cfg.PLEN) begin : gen_virtual_physical_address_lsu
+            lsu_paddr <= mmu_vaddr[CVA6Cfg.PLEN-1:0];
+          end else begin
+            lsu_paddr <= CVA6Cfg.PLEN'(mmu_vaddr);
+          end
+
+          pmp_exception     <= misaligned_exception;
+
+          no_mmu_vaddr_q    <= mmu_vaddr;
+          no_mmu_is_store_q <= st_translation_req;
+        end
       end
     end
+
 
     // dcache interface of PTW not used
     assign dcache_req_ports_o[0].address_index = '0;
@@ -373,6 +398,9 @@ module load_store_unit
 
   end
 
+  assign pmp_lsu_vaddr = CVA6Cfg.MmuPresent ? mmu_vaddr : no_mmu_vaddr_q;
+  assign pmp_lsu_is_store = CVA6Cfg.MmuPresent ? st_translation_req : no_mmu_is_store_q;
+
   // ------------------
   // PMP
   // ------------------
@@ -389,9 +417,9 @@ module load_store_unit
       .icache_fetch_vaddr_i(icache_areq_i.fetch_vaddr),
       .lsu_valid_i         (pmp_translation_valid),
       .lsu_paddr_i         (lsu_paddr),
-      .lsu_vaddr_i         (mmu_vaddr),
+      .lsu_vaddr_i         (pmp_lsu_vaddr),
       .lsu_exception_i     (pmp_exception),
-      .lsu_is_store_i      (st_translation_req),
+      .lsu_is_store_i      (pmp_lsu_is_store),
       .lsu_valid_o         (translation_valid),
       .lsu_paddr_o         (mmu_paddr),
       .lsu_exception_o     (mmu_exception),
@@ -404,6 +432,7 @@ module load_store_unit
   );
 
 
+  assign no_st_pending_o = no_st_pending;
   logic store_buffer_empty;
   // ------------------
   // Store Unit
@@ -418,38 +447,16 @@ module load_store_unit
       .clk_i,
       .rst_ni,
       .flush_i,
-      .rollback_i        (lsu_rollback_i),
-      .rollback_trans_id_i  (lsu_rollback_trans_id_i),
       .stall_st_pending_i,
-      .no_st_pending_o,
-      .store_buffer_empty_o(store_buffer_empty),
-      .store_buffer_rollback_i(store_rollback_i),
-      .store_dispatched_o,
-      .store_dispatched_id_o,
-      .valid_i   (st_valid_i),
-      .lsu_ctrl_i(lsu_ctrl),
-      .pop_st_o  (pop_st),
+      .no_st_pending_o  (no_st_pending),
+      .st_valid_i   (st_valid_i),
+      .lsu_ctrl_i(st_lsq_ctrl),
+      .paddr_i  (st_lsq_paddr),
+      .sent_to_cache_o (st_sent_to_cache),
       .commit_i,
       .commit_ready_o,
       .amo_valid_commit_i,
-
-      .valid_o              (st_valid),
-      .trans_id_o           (st_trans_id),
-      .result_o             (st_result),
-      .ex_o                 (st_ex),
-      // MMU port
-      .translation_req_o    (st_translation_req),
-      .vaddr_o              (st_vaddr),
       .rvfi_mem_paddr_o     (rvfi_mem_paddr_o),
-      .tinst_o              (st_tinst),
-      .hs_ld_st_inst_o      (st_hs_ld_st_inst),
-      .hlvx_inst_o          (st_hlvx_inst),
-      .paddr_i              (mmu_paddr),
-      .ex_i                 (mmu_exception),
-      .dtlb_hit_i           (dtlb_hit),
-      // Load Unit
-      .page_offset_i        (page_offset),
-      .page_offset_matches_o(page_offset_matches),
       // AMOs
       .amo_req_o,
       .amo_resp_i,
@@ -471,36 +478,26 @@ module load_store_unit
       .clk_i,
       .rst_ni,
       .flush_i,
+      .ldbuf_full_o (ldbuf_full),
       .valid_i   (ld_valid_i),
-      .lsu_ctrl_i(lsu_ctrl),
+      .lsu_ctrl_i(ld_lsq_ctrl),
+      .paddr_i  (ld_lsq_paddr),
       .pop_ld_o  (pop_ld),
       .rollback_i        (lsu_rollback_i),
       .rollback_trans_id_i  (lsu_rollback_trans_id_i),
+      .ld_unit_idx_o     (ld_lsq_idx_o),
+      .ld_unit_idx_i     (ld_lsq_idx_i),
+      .ld_unit_canceled_i (ld_lsq_canceled_i),
+      .ld_unit_canceled_id_i(ld_lsq_canceled_id_i),
 
-      .valid_o              (ld_valid),
-      .trans_id_o           (ld_trans_id),
-      .global_id_o          (ld_global_id),
-      .result_o             (ld_result),
-      .ex_o                 (ld_ex),
-      // MMU port
-      .translation_req_o    (ld_translation_req),
-      .vaddr_o              (ld_vaddr),
-      .tinst_o              (ld_tinst),
-      .hs_ld_st_inst_o      (ld_hs_ld_st_inst),
-      .hlvx_inst_o          (ld_hlvx_inst),
-      .paddr_i              (mmu_paddr),
-      .ex_i                 (mmu_exception),
-      .dtlb_hit_i           (dtlb_hit),
-      .dtlb_ppn_i           (dtlb_ppn),
-      // to store unit
-      .page_offset_o        (page_offset),
-      .page_offset_matches_i(page_offset_matches),
-      .store_buffer_empty_i (store_buffer_empty),
-      .commit_tran_id_i,
+
+      .valid_o           (ld_lsq_result_valid),
+      .result_o          (ld_lsq_result),
+
+
       // to memory arbiter
       .req_port_i           (dcache_req_ports_i[1]),
-      .req_port_o           (dcache_req_ports_o[1]),
-      .dcache_wbuffer_not_ni_i
+      .req_port_o           (dcache_req_ports_o[1])
   );
 
   // ----------------------------
@@ -530,84 +527,18 @@ module load_store_unit
       .d_o({store_valid_o, store_trans_id_o, store_result_o, store_exception_o})
   );
 
-  // determine whether this is a load or store
-  always_comb begin : which_op
+  always_comb begin : translation_data
 
-    ld_valid_i        = 1'b0;
-    st_valid_i        = 1'b0;
-
-    translation_req   = 1'b0;
-    mmu_vaddr         = {CVA6Cfg.VLEN{1'b0}};
-    mmu_tinst         = {32{1'b0}};
-    mmu_hs_ld_st_inst = 1'b0;
-    mmu_hlvx_inst     = 1'b0;
-
-    // check the operation to activate the right functional unit accordingly
-    unique case (lsu_ctrl.fu)
-      // all loads go here
-      LOAD: begin
-        ld_valid_i      = lsu_ctrl.valid;
-        translation_req = ld_translation_req;
-        mmu_vaddr       = ld_vaddr;
-        if (CVA6Cfg.RVH) begin
-          mmu_tinst         = ld_tinst;
-          mmu_hs_ld_st_inst = ld_hs_ld_st_inst;
-          mmu_hlvx_inst     = ld_hlvx_inst;
-        end
-      end
-      // all stores go here
-      STORE: begin
-        st_valid_i      = lsu_ctrl.valid;
-        translation_req = st_translation_req;
-        mmu_vaddr       = st_vaddr;
-        if (CVA6Cfg.RVH) begin
-          mmu_tinst         = st_tinst;
-          mmu_hs_ld_st_inst = st_hs_ld_st_inst;
-          mmu_hlvx_inst     = st_hlvx_inst;
-        end
-      end
-      // not relevant for the LSU
-      default: ;
-    endcase
-  end
-
-  // ------------------------
-  // Hypervisor Load/Store
-  // ------------------------
-  // determine whether this is a hypervisor load or store
-  if (CVA6Cfg.RVH) begin
-    always_comb begin : hyp_ld_st
-      // check the operator to activate the right functional unit accordingly
-      hs_ld_st_inst = 1'b0;
-      hlvx_inst     = 1'b0;
-      case (lsu_ctrl.operation)
-        // all loads go here
-        HLV_B, HLV_BU, HLV_H, HLV_HU, HLV_W, HSV_B, HSV_H, HSV_W, HLV_WU, HLV_D, HSV_D: begin
-          hs_ld_st_inst = 1'b1;
-        end
-        HLVX_WU, HLVX_HU: begin
-          hs_ld_st_inst = 1'b1;
-          hlvx_inst     = 1'b1;
-        end
-        default: ;
-      endcase
+    translation_req = lsq_translation_req;
+    mmu_vaddr       = lsq_vaddr;
+    mmu_tinst         = '0;
+    mmu_hs_ld_st_inst = '0;
+    mmu_hlvx_inst     = '0;
+    if (CVA6Cfg.RVH) begin
+      mmu_tinst         = lsq_tinst;
+      mmu_hs_ld_st_inst = lsq_hs_ld_st_inst;
+      mmu_hlvx_inst     = lsq_hlvx_inst;
     end
-  end else begin
-    assign hs_ld_st_inst = 1'b0;
-    assign hlvx_inst     = 1'b0;
-  end
-
-  // ---------------
-  // Byte Enable
-  // ---------------
-  // we can generate the byte enable from the virtual address since the last
-  // 12 bit are the same anyway
-  // and we can always generate the byte enable from the address at hand
-
-  if (CVA6Cfg.IS_XLEN64) begin : gen_8b_be
-    assign be_i = be_gen(vaddr_i[2:0], extract_transfer_size(fu_data_i.operation));
-  end else begin : gen_4b_be
-    assign be_i = be_gen_32(vaddr_i[1:0], extract_transfer_size(fu_data_i.operation));
   end
 
   // ------------------------
@@ -749,47 +680,107 @@ module load_store_unit
   end
 
 
-  // ------------------
-  // LSU Control
-  // ------------------
-  // new data arrives here
-  lsu_ctrl_t lsu_req_i;
 
-  assign lsu_req_i = {
-    lsu_valid_i,
-    vaddr_i,
-    tinst_i,
-    hs_ld_st_inst,
-    hlvx_inst,
-    overflow,
-    g_overflow,
-    fu_data_i.operand_b,
-    be_i,
-    fu_data_i.fu,
-    fu_data_i.operation,
-    fu_data_i.trans_id,
-    fu_data_i.global_id
-  };
-
-  lsu_bypass #(
+  load_store_queue #(
       .CVA6Cfg(CVA6Cfg),
-      .lsu_ctrl_t(lsu_ctrl_t)
-  ) lsu_bypass_i (
-      .clk_i,
-      .rst_ni,
-      .flush_i,
-      .rollback_en_i  (lsu_rollback_i),
-      .rollback_trans_id_i(lsu_rollback_trans_id_i),
-      .lsu_req_i      (lsu_req_i),
-      .lsu_req_valid_i(lsu_valid_i),
-      .pop_ld_i       (pop_ld),
-      .pop_st_i       (pop_st),
+      .lsu_ctrl_t(lsu_ctrl_t),
+      .fu_data_t(fu_data_t),
+      .exception_t(exception_t),
+      .LSQ_DEPTH(CVA6Cfg.NrLSQEntries)
+  ) load_store_queue_i (
+    .clk_i,
+    .rst_ni,
+    .flush_i,
+    .full_o (lsq_full_o),
+    .commit_i, //commit latest store
+    .commit_trans_id_i (commit_tran_id_i),
+    .dcache_wbuffer_not_ni_i (dcache_wbuffer_not_ni_i),
 
-      .lsu_ctrl_o(lsu_ctrl),
-      .ready_o   (lsu_ready_o)
+    .rollback_i (lsu_rollback_i),
+    .rollback_trans_id_i (lsu_rollback_trans_id_i),
+
+    //LSQ write data
+    .ld_we_i               (ld_we_i),
+    .st_we_i               (st_we_i),
+    .fu_data_i             (fu_data_i),
+    .tinst_i               (tinst_i),
+    .decoded_instr_valid_i (decoded_instr_valid_i),
+    .decoded_instr_ack_i   (decoded_instr_ack_i),
+    .data_trans_id_i       (data_trans_id_i),
+    .vaddr_trans_id_i      (vaddr_trans_id_i),
+    .st_data_valid_i       (st_data_valid_i),
+    .vaddr_valid_i         (vaddr_valid_i),
+
+    //MMU
+    .lsu_ctrl_o            (lsu_ctrl),
+    .vaddr_o               (lsq_vaddr),
+    .tinst_o               (lsq_tinst),
+    .hs_ld_st_inst_o       (lsq_hs_ld_st_inst),
+    .hlvx_inst_o           (lsq_hlvx_inst),
+    .translation_req_o     (lsq_translation_req),
+    .translation_type_o    (translation_type),
+    .paddr_i               (mmu_paddr),
+    .ex_i                  (mmu_exception),
+    .dtlb_hit_i            (dtlb_hit),
+    .dtlb_ppn_i            (dtlb_ppn),
+
+    //Write back info
+    .wb_trans_id_i         (wb_trans_id_i),
+    .wbdata_i              (wbdata_i),
+    .wt_valid_i            (wt_valid_i),
+
+    //Store unit
+    .st_buf_lsu_ctrl_o   (st_lsq_ctrl),
+    .st_buf_valid_o      (st_valid_i),
+    .st_buf_paddr_o      (st_lsq_paddr),
+    .no_st_pending_i     (no_st_pending),
+    .st_sent_to_cache_i  (st_sent_to_cache),
+    .st_return_token_o   (st_return_token_o),
+
+    //Load unit
+    .ldbuf_full_i       (ldbuf_full),
+    .ld_pop_i           (pop_ld),
+    .ld_unit_lsu_ctrl_o (ld_lsq_ctrl),
+    .ld_unit_valid_o    (ld_valid_i),
+    .ld_unit_paddr_o    (ld_lsq_paddr),
+    .ld_unit_idx_o      (ld_lsq_idx_i),
+    .ld_unit_canceled_o (ld_lsq_canceled_i),
+    .ld_unit_canceled_id_o(ld_lsq_canceled_id_i),
+
+    .ld_result_valid_i  (ld_lsq_result_valid),
+    .ld_result_i        (ld_lsq_result),
+    .ld_unit_idx_i      (ld_lsq_idx_o),
+
+    //Load write back
+    .ld_valid_o           (ld_valid),
+    .ld_trans_id_o        (ld_trans_id),
+    .ld_global_id_o       (ld_global_id),
+    .ld_result_o          (ld_result),
+    .ld_ex_o              (ld_ex),
+
+    //Store write back
+    .st_valid_o           (st_valid),
+    .st_trans_id_o        (st_trans_id),
+    .st_result_o          (st_result),
+    .st_ex_o              (st_ex)
   );
 
   assign rvfi_lsu_ctrl_o = lsu_ctrl;
+  assign st_translation_req = translation_type;
+
+  // pragma translate off
+  assert property (
+  @(posedge clk_i) disable iff (!rst_ni)
+  translation_valid |-> !$isunknown(mmu_paddr)
+  )
+  else $error(
+    "TRANSLATION VALID BUT PADDR X: valid=%b paddr=%h lsu_paddr=%h pmp_valid=%b",
+    $sampled(translation_valid),
+    $sampled(mmu_paddr),
+    $sampled(lsu_paddr),
+    $sampled(pmp_translation_valid)
+  );
+  // pragma translate on
 
 endmodule
 
