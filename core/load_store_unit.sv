@@ -214,6 +214,8 @@ module load_store_unit
   logic                    translation_valid;
 
   logic [$clog2(CVA6Cfg.NrLSQEntries)-1:0] ld_lsq_idx_o, ld_lsq_idx_i;
+  logic [CVA6Cfg.NrLSQEntries-1:0]                              ld_unit_canceled_i;
+  logic [CVA6Cfg.NrLSQEntries-1:0][CVA6Cfg.TRANS_ID_BITS-1:0]   ld_unit_canceled_id_i;
 
 
 
@@ -485,6 +487,9 @@ module load_store_unit
       .rollback_trans_id_i  (lsu_rollback_trans_id_i),
       .ld_unit_idx_o     (ld_lsq_idx_o),
       .ld_unit_idx_i     (ld_lsq_idx_i),
+      .ld_unit_canceled_i (ld_lsq_canceled_i),
+      .ld_unit_canceled_id_i(ld_lsq_canceled_id_i),
+
 
       .valid_o           (ld_lsq_result_valid),
       .result_o          (ld_lsq_result),
@@ -739,6 +744,9 @@ module load_store_unit
     .ld_unit_valid_o    (ld_valid_i),
     .ld_unit_paddr_o    (ld_lsq_paddr),
     .ld_unit_idx_o      (ld_lsq_idx_i),
+    .ld_unit_canceled_o (ld_lsq_canceled_i),
+    .ld_unit_canceled_id_o(ld_lsq_canceled_id_i),
+
     .ld_result_valid_i  (ld_lsq_result_valid),
     .ld_result_i        (ld_lsq_result),
     .ld_unit_idx_i      (ld_lsq_idx_o),

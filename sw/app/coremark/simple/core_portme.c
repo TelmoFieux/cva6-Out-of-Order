@@ -61,6 +61,8 @@ volatile ee_s32 seed5_volatile = 0;
 
 /** Define Host specific (POSIX), or target specific global time variables. */
 static CORETIMETYPE start_time_val, stop_time_val;
+/* instructions retired during the timed region (for IPC) */
+static CORETIMETYPE start_instret_val, stop_instret_val;
 
 /* Function : start_time
         This function will be called right before starting the timed portion of
@@ -73,7 +75,8 @@ static CORETIMETYPE start_time_val, stop_time_val;
 void
 start_time(void)
 {
-    GETMYTIME(&start_time_val);
+    start_instret_val = read_csr(minstret);   /* instret first ...          */
+    GETMYTIME(&start_time_val);               /* ... then mcycle            */
 }
 /* Function : stop_time
         This function will be called right after ending the timed portion of the
@@ -86,7 +89,8 @@ start_time(void)
 void
 stop_time(void)
 {
-    GETMYTIME(&stop_time_val);
+    GETMYTIME(&stop_time_val);                /* mcycle first ...           */
+    stop_instret_val = read_csr(minstret);    /* ... then instret           */
 }
 /* Function : get_time
         Return an abstract "ticks" number that signifies time on the system.
@@ -145,5 +149,12 @@ if (sizeof(ee_ptr_int) != sizeof(ee_u8 *))
 void
 portable_fini(core_portable *p)
 {
+    ee_u32 cycles = (ee_u32)(stop_time_val - start_time_val);
+    ee_u32 instrs = (ee_u32)(stop_instret_val - start_instret_val);
+    ee_printf("Cycles (timed region)       : %lu\n", (unsigned long)cycles);
+    ee_printf("Instructions (timed region) : %lu\n", (unsigned long)instrs);
+    /* IPC x 1000 as an integer, to avoid relying on printf %f */
+    ee_printf("IPC x1000                   : %lu\n",
+              (unsigned long)(((unsigned long long)instrs * 1000ULL) / cycles));
     p->portable_id = 0;
 }

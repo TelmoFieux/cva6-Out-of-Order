@@ -109,6 +109,8 @@ module load_store_queue
     output logic [CVA6Cfg.PLEN-1:0]                                   ld_unit_paddr_o,
     // index of the load instr in the load queue - LOAD_UNIT
     output logic [$clog2(LSQ_DEPTH)-1:0]                              ld_unit_idx_o,
+    output logic [LSQ_DEPTH-1:0]                                      ld_unit_canceled_o,
+    output logic [LSQ_DEPTH-1:0][CVA6Cfg.TRANS_ID_BITS-1:0]           ld_unit_canceled_id_o,
 
     // is load unit result valid - LOAD_UNIT
     input logic                                                       ld_result_valid_i,
@@ -208,6 +210,8 @@ module load_store_queue
     logic [LSQ_DEPTH-1:0] ready; // data and paddr are valid
     logic [LSQ_DEPTH-1:0] reserved; // instr has been accepted by the rob
     logic [LSQ_DEPTH-1:0] issued; // instr has been issued to the cache
+    logic [LSQ_DEPTH-1:0] speculative_ready; // instr has been issued to the cache while older store do not all have adress translated
+    logic [LSQ_DEPTH-1:0] issue_canceled; // instr was issued speculatively and a dependencie was later found
     logic [LSQ_DEPTH-1:0][CVA6Cfg.TRANS_ID_BITS-1:0] vaddr_trans_id;
     logic [LSQ_DEPTH-1:0] vaddr_valid; // vaddr is valid
     logic [LSQ_DEPTH-1:0][CVA6Cfg.PLEN-1:0] paddr;
@@ -779,6 +783,8 @@ module load_store_queue
       if (ld_we_i[i] & !ld_full[i]) begin
         ld_queue_n.reserved[ld_alloc_idx[i]] = 1'b1;
         ld_queue_n.issued[ld_alloc_idx[i]] = 1'b0;
+        ld_queue_n.speculative_ready[ld_alloc_idx[i]] = 1'b0;
+        ld_queue_n.issue_canceled[ld_alloc_idx[i]] = 1'b0;
         ld_queue_n.instr[ld_alloc_idx[i]] = decoded_req[i];
         ld_queue_n.ready[ld_alloc_idx[i]] = '0;
         ld_queue_n.ex[ld_alloc_idx[i]] = '0;
@@ -946,13 +952,15 @@ module load_store_queue
 
     ld_unit_ready = '0;
 
+    ld_unit_canceled_o = '0;
+    ld_unit_canceled_id_o = '0;
+
     for (int unsigned i = 0; i<LSQ_DEPTH; i ++) begin
       if(comb_st_paddr_valid[i] && data_valid[i] && st_queue_q.reserved[i] & !comb_st_ex_valid[i]) begin
         st_queue_n.ready[i] = 1'b1;
       end
 
       // load is not ready if :
-      // - all previous store did not receive their paddr (we cannot verify dependencies)
       // - it is a non idempotent load and not all of the previous instr have been committed or
       // dcache write buffer has no ni store or not all previous committed store have been sent to
       // the cache
@@ -963,21 +971,37 @@ module load_store_queue
         if (ld_queue_q.paddr_ni[i]) begin
           ld_queue_n.ready[i] = commit_trans_id_i == ld_queue_q.instr[i].trans_id & dcache_wbuffer_not_ni_i & no_st_pending_i;
           ld_unit_ready[i] = ld_queue_q.ready[i];
+        end
+      end
+
+      //Do not issue loads with dependencies
+      if (|st_older[i]) begin
+
+        if (!st_older_paddr_valid[i]) begin
+          ld_queue_n.speculative_ready[i] = 1'b1;
         end else begin
-          if (|st_older[i]) begin
-            if (!st_older_paddr_valid[i]) begin
-              ld_queue_n.ready[i] = 1'b0;
-              ld_unit_ready[i] = 1'b0;
-            end else begin
-              for (int unsigned j = 0; j<LSQ_DEPTH; j ++) begin
-                if(st_older[i][j] && (comb_matching_addr[i][j] || comb_partial_matching_addr[i][j])) begin
-                  ld_queue_n.ready[i] = 1'b0;
-                  ld_unit_ready[i] = 1'b0;
-                end
-              end
+          ld_queue_n.speculative_ready[i] = 1'b0;
+        end
+
+
+
+        for (int unsigned j = 0; j<LSQ_DEPTH; j ++) begin
+          if(st_older[i][j] && (comb_matching_addr[i][j] || comb_partial_matching_addr[i][j])) begin
+            ld_queue_n.ready[i] = 1'b0;
+            ld_unit_ready[i] = 1'b0;
+            // a speculative load needs to be cancelled
+            if ((ld_queue_q.speculative_ready[i] || !ld_queue_q.ready[i]) && ld_queue_q.issued[i] ) begin
+              ld_queue_n.issue_canceled[i] = 1'b1;
+              // reset to 0 if it is a full match the forwarding section below will re-enable it
+              ld_queue_n.issued[i] = 1'b0;
+              ld_queue_n.result_valid[i] = 1'b0;
+              ld_unit_canceled_o[i] = 1'b1;
+              ld_unit_canceled_id_o[i] = ld_queue_q.instr[i].trans_id;
             end
           end
         end
+      end else begin
+        ld_queue_n.speculative_ready[i] = 1'b0;
       end
 
       // never flag ready an instrucion with a result valid or exception
@@ -989,31 +1013,8 @@ module load_store_queue
     end
 
     // ---------------
-    // Store to Load forwarding
+    // Speculative load
     // ---------------
-
-    for (int unsigned i = 0; i<LSQ_DEPTH; i ++) begin
-      if(comb_ld_paddr_valid[i] & ld_queue_q.reserved[i] & !ld_queue_q.paddr_ni[i] & !comb_ld_ex_valid[i]) begin
-        // only forward if all data is available
-        if (st_older_all_valid[i]) begin
-          if (!full_no_match[i]) begin
-            if (!partial_no_match[i]) begin
-              if (age_matrix_q[full_match_winner_idx[i]+LSQ_DEPTH][partial_match_winner_idx[i]+LSQ_DEPTH]) begin
-                ld_queue_n.result_valid[i] = 1'b1;
-                ld_queue_n.result[i] = ld_extend(ld_queue_q.instr[i].operation, fwd_data[full_match_winner_idx[i]]);
-                ld_is_forwarded[i] = 1'b1;
-                ld_unit_ready[i] = 1'b0;
-              end
-            end else begin
-              ld_queue_n.result_valid[i] = 1'b1;
-              ld_queue_n.result[i] = ld_extend(ld_queue_q.instr[i].operation, fwd_data[full_match_winner_idx[i]]);
-              ld_is_forwarded[i] = 1'b1;
-              ld_unit_ready[i] = 1'b0;
-            end
-          end
-        end
-      end
-    end
 
     // ---------------
     // Issuing to store and load unit
@@ -1047,6 +1048,7 @@ module load_store_queue
     ld_ready_pointer_valid_n = ld_ready_pointer_valid_q;
 
     //load unit
+
     if (ld_pop_i) begin
       ld_ready_pointer_valid_n = '0;
       if (ld_ready_pointer_valid_q) begin
@@ -1061,15 +1063,55 @@ module load_store_queue
       ld_ready_pointer_valid_n = '1;
     end
 
+    // data is valid only if not canceled
     if (ld_result_valid_i) begin
-      ld_queue_n.result_valid[ld_unit_idx_i] = 1'b1;
-      ld_queue_n.result[ld_unit_idx_i] = ld_result_i;
+      if (!ld_queue_q.result_valid[ld_unit_idx_i]) begin
+        ld_queue_n.result_valid[ld_unit_idx_i] = 1'b1;
+        ld_queue_n.result[ld_unit_idx_i] = ld_result_i;
+      end
+    end
+
+    // ---------------
+    // Store to Load forwarding
+    // ---------------
+
+    // Forwarding section is purposly put after the regular write back to override it in case of
+    // late dependencies detection for exemple if we detecte a forwarding the same cycle we receive
+    // data from a bad speculative load
+
+    for (int unsigned i = 0; i<LSQ_DEPTH; i ++) begin
+      if(comb_ld_paddr_valid[i] & ld_queue_q.reserved[i] & !ld_queue_q.paddr_ni[i] & !comb_ld_ex_valid[i]) begin
+        // only forward if all data is available
+        if (st_older_all_valid[i]) begin
+          if (!full_no_match[i]) begin
+            if (!partial_no_match[i]) begin
+              if (age_matrix_q[full_match_winner_idx[i]+LSQ_DEPTH][partial_match_winner_idx[i]+LSQ_DEPTH]) begin
+                ld_queue_n.result_valid[i] = 1'b1;
+                ld_queue_n.speculative_ready[i] = 1'b0;
+                ld_queue_n.issue_canceled[i] = 1'b0;
+                ld_queue_n.result[i] = ld_extend(ld_queue_q.instr[i].operation, fwd_data[full_match_winner_idx[i]]);
+                ld_is_forwarded[i] = 1'b1;
+                ld_unit_ready[i] = 1'b0;
+              end
+            end else begin
+              ld_queue_n.result_valid[i] = 1'b1;
+              ld_queue_n.speculative_ready[i] = 1'b0;
+              ld_queue_n.issue_canceled[i] = 1'b0;
+              ld_queue_n.result[i] = ld_extend(ld_queue_q.instr[i].operation, fwd_data[full_match_winner_idx[i]]);
+              ld_is_forwarded[i] = 1'b1;
+              ld_unit_ready[i] = 1'b0;
+            end
+          end
+        end
+      end
     end
 
     // free entrie only when wb is done
     if (ld_valid_o) begin
       ld_queue_n.ready[ld_wb_pointer] = '0;
       ld_queue_n.issued[ld_wb_pointer] = '0;
+      ld_queue_n.speculative_ready[ld_wb_pointer] = 1'b0;
+      ld_queue_n.issue_canceled[ld_wb_pointer] = 1'b0;
       ld_queue_n.result_valid[ld_wb_pointer] = '0;
       ld_queue_n.reserved[ld_wb_pointer] = '0;
       ld_queue_n.vaddr_valid[ld_wb_pointer] = '0;
@@ -1085,6 +1127,8 @@ module load_store_queue
         if (ld_queue_n.reserved[i] && ld_queue_n.instr[i].trans_id == rollback_trans_id_i[j] && rollback_i[j]) begin
           ld_queue_n.reserved[i] = 1'b0;
           ld_queue_n.ready[i] = 1'b0;
+          ld_queue_n.speculative_ready[i] = 1'b0;
+          ld_queue_n.issue_canceled[i] = 1'b0;
           ld_queue_n.issued[i] = 1'b0;
           ld_queue_n.vaddr_valid[i] = 1'b0;
           ld_queue_n.paddr_valid[i] = 1'b0;
@@ -1571,7 +1615,7 @@ module load_store_queue
   assign ld_trans_id_o = ld_queue_q.instr[ld_wb_pointer].trans_id;
 
   for (genvar i = 0 ; i<LSQ_DEPTH ; i++ ) begin
-    assign wb_valid[i] = (ld_queue_q.result_valid[i] || ld_queue_q.ex[i].valid) & ld_queue_q.reserved[i];
+    assign wb_valid[i] = ((ld_queue_q.result_valid[i] && !ld_queue_q.speculative_ready[i]) || ld_queue_q.ex[i].valid) & ld_queue_q.reserved[i];
   end
 
   always_ff @(posedge clk_i or negedge rst_ni) begin
@@ -1593,6 +1637,8 @@ module load_store_queue
     end else if (flush_i) begin
       ld_queue_q.ready <= '0;
       ld_queue_q.issued <= '0;
+      ld_queue_q.speculative_ready <= '0;
+      ld_queue_q.issue_canceled <= '0;
       ld_queue_q.result_valid <= '0;
       ld_queue_q.reserved <= '0;
       ld_queue_q.vaddr_valid <= '0;
@@ -1850,18 +1896,6 @@ module load_store_queue
   final $display("loads->cache=%0d  mauvais chemin=%0d  inversions d'age=%0d",
                 c_ld_to_cache, c_ld_squashed_after_issue, c_ld_age_inversion);
 
-  longint unsigned c_ld_wait_addr, c_ld_wait_tr, c_ld_wait_st, c_ld_in_cache, c_ld_wait_wb;
-  always_ff @(posedge clk_i) if (rst_ni && OoO_perf_pkg::window)
-    for (int i = 0; i < LSQ_DEPTH; i++) if (ld_queue_q.reserved[i]) begin
-      if      (!ld_queue_q.vaddr_valid[i])  c_ld_wait_addr++;  // opérande d'adresse
-      else if (!ld_queue_q.paddr_valid[i])  c_ld_wait_tr++;    // traduction
-      else if (ld_queue_q.result_valid[i])  c_ld_wait_wb++;    // résultat prêt, attend le port de WB
-      else if (ld_queue_q.issued[i])        c_ld_in_cache++;   // envoyé au cache       -> ce que l'idée 2 récupère
-      else                                  c_ld_wait_st++;    // dépendance store / forwarding partiel / port cache
-    end
-  final $display("loads en attente de vaddr=%0d load en attente de traduction=%0d load en attente de write back=%0d load envoyé au cache mais toujours dans lsq=%0d load attend un store = %0d",
-                c_ld_wait_addr, c_ld_wait_tr, c_ld_wait_st, c_ld_in_cache, c_ld_wait_wb);
-
   longint unsigned c_st_addr, c_st_data, c_st_wait_commit, c_st_committed;
   always_ff @(posedge clk_i) if (rst_ni && OoO_perf_pkg::window)
     for (int i = 0; i < LSQ_DEPTH; i++) if (st_queue_q.reserved[i]) begin
@@ -1907,5 +1941,198 @@ module load_store_queue
                 c_lb, c_lh, c_lw, c_ld_partial_wait);
 
   // pragma translate_on
+
+  // =====================================================================================
+  //  load_store_queue.sv : instrumentation (simulation uniquement)
+  // =====================================================================================
+  // pragma translate_off
+
+  longint unsigned dbg_cyc = 0;          // horloge libre (non fenêtrée) pour mesurer des délais
+  longint unsigned c_cycles = 0;         // cycles de la fenêtre, vus par la LSQ
+  always_ff @(posedge clk_i) if (rst_ni) begin
+    dbg_cyc <= dbg_cyc + 1;
+    if (OoO_perf_pkg::window) c_cycles <= c_cycles + 1;
+  end
+
+  function automatic real lsq_pct(longint unsigned a, longint unsigned b);
+    return (b != 0) ? 100.0 * real'(a) / real'(b) : 0.0;
+  endfunction
+
+  // -------------------------------------------------------------------------------------
+  // 1. Où les loads passent leur temps dans la LQ (somme sur les entrées, en entrées x cycles)
+  //    + décomposition de l'ancienne catégorie "attend un store" (= pas encore envoyé)
+  // -------------------------------------------------------------------------------------
+  longint unsigned c_ld_wait_addr, c_ld_wait_tr, c_ld_in_cache, c_ld_wait_wb;
+  longint unsigned c_ns_ni;              // load non idempotent : attend le commit
+  longint unsigned c_ns_wait_gnt;        // déjà sélectionné (ld_ready_pointer_q), attend ld_pop_i (grant cache)
+  longint unsigned c_ns_ready_ldbuf;     // prêt, non sélectionné car ldbuf plein
+  longint unsigned c_ns_ready_lost;      // prêt, un autre load a été choisi (1 envoi / cycle)
+  longint unsigned c_ns_fwd_now;         // forwarding possible ce cycle (coût normal : 1 cycle)
+  longint unsigned c_ns_fwd_data;        // correspond à un store plus ancien dont la DONNEE manque
+  longint unsigned c_ns_fwd_other;       // la donnée du store gagnant est là, mais un AUTRE store plus ancien
+                                         // n'a pas sa donnée/adresse (condition st_older_all_valid trop stricte)
+  longint unsigned c_ns_partial;         // correspondance partielle : doit attendre le drain du store
+  longint unsigned c_ns_st_addr;         // un store plus ancien sans adresse (devrait être ~0 avec la spéculation)
+  longint unsigned c_ns_other;
+
+  always_ff @(posedge clk_i) if (rst_ni && OoO_perf_pkg::window)
+    for (int i = 0; i < LSQ_DEPTH; i++) if (ld_queue_q.reserved[i]) begin
+      automatic logic any_match = !full_no_match[i] || !partial_no_match[i];
+      // même condition que la section forwarding
+      automatic logic fwd_ok    = !full_no_match[i] && (partial_no_match[i] ||
+                                  age_matrix_q[full_match_winner_idx[i]+LSQ_DEPTH][partial_match_winner_idx[i]+LSQ_DEPTH]);
+
+      if      (!ld_queue_q.vaddr_valid[i])  c_ld_wait_addr++;   // opérande d'adresse
+      else if (!ld_queue_q.paddr_valid[i])  c_ld_wait_tr++;     // traduction
+      else if (ld_queue_q.result_valid[i])  c_ld_wait_wb++;     // résultat prêt, attend le WB
+      else if (ld_queue_q.issued[i])        c_ld_in_cache++;    // envoyé au cache
+      // ---- pas encore envoyé : pourquoi ?
+      else if (ld_queue_q.paddr_ni[i])      c_ns_ni++;
+      else if (ld_ready_pointer_valid_q && ld_ready_pointer_q == i) c_ns_wait_gnt++;
+      else if (ld_unit_ready[i]) begin
+        if (ldbuf_full_i)                   c_ns_ready_ldbuf++;
+        else                                c_ns_ready_lost++;
+      end
+      else if (any_match) begin
+        if (!fwd_ok)                        c_ns_partial++;
+        else if (st_older_all_valid[i])     c_ns_fwd_now++;
+        else if (!fwd_data_valid[full_match_winner_idx[i]]) c_ns_fwd_data++;
+        else                                c_ns_fwd_other++;
+      end
+      else if (|st_older[i] && !st_older_paddr_valid[i]) c_ns_st_addr++;
+      else                                  c_ns_other++;
+    end
+
+  // -------------------------------------------------------------------------------------
+  // 2. Loads spéculatifs
+  // -------------------------------------------------------------------------------------
+  logic [LSQ_DEPTH-1:0]   dbg_spec;      // entrée émise au cache alors qu'un store plus ancien n'avait pas d'adresse
+  logic [LSQ_DEPTH-1:0]   dbg_arr_v;     // la donnée cache est arrivée pour cette entrée
+  longint unsigned        dbg_t_arr [LSQ_DEPTH];
+
+  longint unsigned c_spec_issued;        // loads émis spéculativement
+  longint unsigned c_spec_won;           // ... arrivés au WB sans annulation
+  longint unsigned c_spec_canceled;      // ... annulés (dépendance découverte)
+  longint unsigned c_spec_squashed;      // ... tués par un rollback (mauvais chemin)
+  longint unsigned c_spec_overlap;       // cycles où l'accès cache d'un load spéculatif est masqué par
+                                         // l'attente d'adresse du store  => GAIN RÉEL (borne sup.)
+  longint unsigned c_spec_hold;          // cycles où le résultat est prêt mais bloqué par speculative_ready
+  longint unsigned c_spec_wait_noissue;  // speculative_ready=1 mais load pas encore émis
+
+  // 3. Délai arrivée cache -> WB (ce que verrait un réveil anticipé)
+  longint unsigned c_wb_d1, c_wb_d2, c_wb_d3p, c_wb_fwd;
+
+  always_ff @(posedge clk_i) begin
+    if (!rst_ni || flush_i) begin
+      dbg_spec  <= '0;
+      dbg_arr_v <= '0;
+    end else begin
+      // émission vers le cache (même index que le pop de la logique principale)
+      if (ld_pop_i) begin
+        automatic logic s = |st_older[ld_selected_pointer] && !st_older_paddr_valid[ld_selected_pointer];
+        dbg_spec[ld_selected_pointer] <= s;
+        if (OoO_perf_pkg::window && s) c_spec_issued++;
+      end
+
+      for (int i = 0; i < LSQ_DEPTH; i++) begin
+        if (ld_unit_canceled_o[i]) begin
+          if (OoO_perf_pkg::window) c_spec_canceled++;
+          dbg_spec[i]  <= 1'b0;
+          dbg_arr_v[i] <= 1'b0;
+        end
+        // libéré sans WB = rollback
+        if (ld_queue_q.reserved[i] && !ld_queue_n.reserved[i] && !(ld_valid_o && ld_wb_pointer == i)) begin
+          if (OoO_perf_pkg::window && dbg_spec[i]) c_spec_squashed++;
+          dbg_spec[i]  <= 1'b0;
+          dbg_arr_v[i] <= 1'b0;
+        end
+        if (OoO_perf_pkg::window && ld_queue_q.reserved[i] && ld_queue_q.speculative_ready[i]) begin
+          if (dbg_spec[i] && !ld_queue_q.result_valid[i])  c_spec_overlap++;
+          if (ld_queue_q.result_valid[i])                  c_spec_hold++;
+          if (!ld_queue_q.issued[i] && !ld_queue_q.result_valid[i]) c_spec_wait_noissue++;
+        end
+      end
+
+      // arrivée de la donnée cache (ignorée si l'entrée a déjà un résultat, ex. forwardé)
+      if (ld_result_valid_i && !ld_queue_q.result_valid[ld_unit_idx_i]) begin
+        dbg_arr_v[ld_unit_idx_i] <= 1'b1;
+        dbg_t_arr[ld_unit_idx_i] <= dbg_cyc;
+      end
+
+      // write-back
+      if (ld_valid_o) begin
+        if (OoO_perf_pkg::window) begin
+          if (dbg_spec[ld_wb_pointer]) c_spec_won++;
+          if (!dbg_arr_v[ld_wb_pointer]) c_wb_fwd++;                 // forwardé ou exception
+          else unique case (dbg_cyc - dbg_t_arr[ld_wb_pointer])
+            1:       c_wb_d1++;
+            2:       c_wb_d2++;
+            default: c_wb_d3p++;
+          endcase
+        end
+        dbg_spec[ld_wb_pointer]  <= 1'b0;
+        dbg_arr_v[ld_wb_pointer] <= 1'b0;
+      end
+    end
+  end
+
+  // -------------------------------------------------------------------------------------
+  // 4. Occupation LQ / SQ
+  // -------------------------------------------------------------------------------------
+  longint unsigned c_lq_full, c_sq_full, c_lq_occ, c_sq_occ, c_lq_reject, c_sq_reject;
+  always_ff @(posedge clk_i) if (rst_ni && OoO_perf_pkg::window) begin
+    if (&ld_queue_q.reserved)          c_lq_full++;
+    if (st_status_cnt_q >= LSQ_DEPTH)  c_sq_full++;     // inclut les stores commités non drainés
+    c_lq_occ += $countones(ld_queue_q.reserved);
+    c_sq_occ += st_status_cnt_q;
+    if (|(ld_we_i & ld_full))          c_lq_reject++;   // ~0 attendu : les crédits bloquent en amont
+    if (|(st_we_i & st_full))          c_sq_reject++;
+  end
+
+  // -------------------------------------------------------------------------------------
+  final begin
+    automatic longint unsigned ns_tot = c_ns_ni + c_ns_wait_gnt + c_ns_ready_ldbuf + c_ns_ready_lost
+      + c_ns_fwd_now + c_ns_fwd_data + c_ns_fwd_other + c_ns_partial + c_ns_st_addr + c_ns_other;
+    automatic longint unsigned wb_tot = c_wb_d1 + c_wb_d2 + c_wb_d3p;
+
+    $display("");
+    $display("=========== instrumentation LSQ (%0d cycles fenetre) ===========", c_cycles);
+    $display("--- temps des loads dans la LQ (entrees x cycles)");
+    $display("attente vaddr .............. %0d", c_ld_wait_addr);
+    $display("attente traduction ......... %0d", c_ld_wait_tr);
+    $display("pas encore envoye .......... %0d", ns_tot);
+    $display("envoye, dans le cache ...... %0d", c_ld_in_cache);
+    $display("resultat pret, attend WB ... %0d", c_ld_wait_wb);
+    $display("--- detail 'pas encore envoye'");
+    $display("  non idempotent ........... %0d", c_ns_ni);
+    $display("  selectionne, attend grant  %0d", c_ns_wait_gnt);
+    $display("  pret, ldbuf plein ........ %0d", c_ns_ready_ldbuf);
+    $display("  pret, autre load choisi .. %0d", c_ns_ready_lost);
+    $display("  forwarding ce cycle ...... %0d", c_ns_fwd_now);
+    $display("  fwd : donnee store absente %0d", c_ns_fwd_data);
+    $display("  fwd : bloque par autre st  %0d", c_ns_fwd_other);
+    $display("  match partiel (drain) .... %0d", c_ns_partial);
+    $display("  store ancien sans adresse  %0d", c_ns_st_addr);
+    $display("  autre .................... %0d", c_ns_other);
+    $display("--- loads speculatifs");
+    $display("emis / gagnes / annules / rollback  %0d / %0d / %0d / %0d",
+             c_spec_issued, c_spec_won, c_spec_canceled, c_spec_squashed);
+    $display("cycles d'acces cache masques  %0d   (%0.2f %% des cycles : gain max)",
+             c_spec_overlap, lsq_pct(c_spec_overlap, c_cycles));
+    $display("resultat bloque par spec ... %0d", c_spec_hold);
+    $display("spec mais pas encore emis .. %0d", c_spec_wait_noissue);
+    $display("--- arrivee cache -> WB (loads non forwardes)");
+    $display("1 cycle / 2 / 3+ ........... %0d / %0d / %0d   (%0.1f %% a 1 cycle)",
+             c_wb_d1, c_wb_d2, c_wb_d3p, lsq_pct(c_wb_d1, wb_tot));
+    $display("loads forwardes ............ %0d", c_wb_fwd);
+    $display("--- occupation");
+    $display("LQ pleine .................. %0.2f %% des cycles  (occupation moy. %0.2f / %0d)",
+             lsq_pct(c_lq_full, c_cycles), real'(c_lq_occ) / real'(c_cycles ? c_cycles : 1), LSQ_DEPTH);
+    $display("SQ pleine .................. %0.2f %% des cycles  (occupation moy. %0.2f / %0d)",
+             lsq_pct(c_sq_full, c_cycles), real'(c_sq_occ) / real'(c_cycles ? c_cycles : 1), LSQ_DEPTH);
+    $display("rejets LQ / SQ ............. %0d / %0d", c_lq_reject, c_sq_reject);
+  end
+  // pragma translate_on
+
 
 endmodule

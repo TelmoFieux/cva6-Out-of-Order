@@ -1278,7 +1278,7 @@ module issue_stage
     K_HEAD_BLOCKED, K_NO_READY, K_IRO_REJECT,
     K_ALU_RS0, K_ALU_RS1, K_ALU_IMBALANCE,
     K_RS0_ALLOC, K_RS0_FT, K_RS1_ALLOC, K_RS1_FT,
-    K_MUL_WB, K_MUL_CONSUMER, K_LDTOK_HELD,
+    K_MUL_WB, K_MUL_CONSUMER, K_LD_WB, K_LD_CONSUMER, K_LD_CONSUMER_MEM, K_LDTOK_HELD,
     K_NB
   } perf_cnt_e;
 
@@ -1343,6 +1343,24 @@ module issue_stage
       if (wb_valid_o[i] && is_mul_op(wb_op_o[i])) begin
         mul_wb_d = 1'b1;
         mul_rd_d = wbaddr_o[i];
+      end
+    end
+  end
+
+  logic                            ld_wb_d, ld_wb_q2;
+  logic [CVA6Cfg.RegAddrWidth-1:0] ld_rd_d, ld_rd_q2;
+
+  function automatic logic is_ld_op(fu_op o);
+    return o inside {LB, LBU, LH, LHU, LW, LWU, LD};
+  endfunction
+
+  always_comb begin
+    ld_wb_d = 1'b0;
+    ld_rd_d = '0;
+    for (int i = 0; i < CVA6Cfg.NrWbPorts; i++) begin
+      if (wb_valid_o[i] && is_ld_op(wb_op_o[i])) begin
+        ld_wb_d = 1'b1;
+        ld_rd_d = wbaddr_o[i];
       end
     end
   end
@@ -1419,6 +1437,11 @@ module issue_stage
     $display("--- potentiel wakeup MUL (borne sup.)");
     $display("write-backs MUL ............ %0d", tot[K_MUL_WB]);
     $display("consommateurs a WB+1 ....... %0d   (%0.2f %% des cycles)", tot[K_MUL_CONSUMER], pct(tot[K_MUL_CONSUMER]));
+
+    $display("--- potentiel wakeup load (borne sup.)");
+    $display("write-backs load ........... %0d", tot[K_LD_WB]);
+    $display("consommateurs a WB+1 ....... %0d   (%0.2f %% des cycles)", tot[K_LD_CONSUMER], pct(tot[K_LD_CONSUMER]));
+    $display("  dont load/store .......... %0d", tot[K_LD_CONSUMER_MEM]);
   endfunction
 
   // ---- comptage
@@ -1429,6 +1452,11 @@ module issue_stage
     mul_wb_q2  <= mul_wb_d;
     mul_rd_q2  <= mul_rd_d;
     dump_req_q <= dump_req;
+    ld_wb_q2 <= ld_wb_d;
+    ld_rd_q2 <= ld_rd_d;
+
+
+
 
     if (rst_ni) all_cycles++;
 
@@ -1514,6 +1542,19 @@ module issue_stage
         end
       end
 
+      if (ld_wb_d) win[K_LD_WB]++;
+      if (ld_wb_q2) begin
+        for (int i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
+          if (rm_i[i] && ld_rd_q2 != '0 &&
+              ((issue_instr_sb_iro[i].rs1 == ld_rd_q2) ||
+               (!issue_instr_sb_iro[i].use_imm && issue_instr_sb_iro[i].rs2 == ld_rd_q2))) begin
+            win[K_LD_CONSUMER]++;
+            // consommateur = load/store : chaîne d'adresses (pointer chasing) ou donnée de store
+            if (issue_instr_sb_iro[i].fu inside {LOAD, STORE}) win[K_LD_CONSUMER_MEM]++;
+          end
+        end
+      end
+
       // ---- cloture de la fenetre
       win_cycles++;
       if (win_cycles >= win_len) begin
@@ -1536,6 +1577,7 @@ module issue_stage
   end
 
   final dump_counters("fin de simulation");
+
   // pragma translate_on
 
 endmodule
