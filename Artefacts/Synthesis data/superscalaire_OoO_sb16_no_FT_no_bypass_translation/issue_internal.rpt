@@ -1,0 +1,1389 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+| Date         : Thu Oct 15 20:29:37 2026
+| Host         : telmo-HYM-WXX running 64-bit Ubuntu 24.04.5 LTS
+| Command      : report_timing -from [get_cells -hier -filter {NAME =~ *issue_stage_i/* && IS_SEQUENTIAL}] -to [get_cells -hier -filter {NAME =~ *issue_stage_i/* && IS_SEQUENTIAL}] -max_paths 10 -nworst 1 -unique_pins -file issue_internal.rpt
+| Design       : cva6_zybo_z7_20
+| Device       : 7z020-clg400
+| Speed File   : -1  PRODUCTION 1.12 2019-11-22
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             0.239ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[1]/D
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        22.534ns  (logic 8.162ns (36.221%)  route 14.372ns (63.779%))
+  Logic Levels:           36  (CARRY4=8 LUT2=5 LUT3=5 LUT5=5 LUT6=13)
+  Clock Path Skew:        -0.176ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.512ns = ( 23.488 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.851ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.841    -0.851    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y108        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X49Y108        FDCE (Prop_fdce_C_Q)         0.456    -0.395 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/Q
+                         net (fo=9, routed)           0.503     0.108    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_2[1]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I1_O)        0.124     0.232 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503/O
+                         net (fo=1, routed)           0.000     0.232    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     0.782 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.782    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.116 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.071 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.802    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     2.926 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     2.926    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.476 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.476    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.810 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.398    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.701 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     4.965    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.089 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.887    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.011 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.597    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.721 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.023    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.147 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.664    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.788 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.231    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.355 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.355    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     8.905 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     8.905    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.239 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.555    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.858 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.606    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.730 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.331    11.061    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X60Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.185 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_397/O
+                         net (fo=1, routed)           0.000    11.185    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262_0[0]
+    SLICE_X60Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.717 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336/CO[3]
+                         net (fo=1, routed)           0.000    11.717    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336_n_0
+    SLICE_X60Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.051 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262/O[1]
+                         net (fo=1, routed)           0.302    12.353    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_0[0]
+    SLICE_X62Y114        LUT3 (Prop_lut3_I2_O)        0.303    12.656 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_125/O
+                         net (fo=4, routed)           0.329    12.985    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return6_out
+    SLICE_X63Y115        LUT6 (Prop_lut6_I0_O)        0.124    13.109 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_39/O
+                         net (fo=54, routed)          0.690    13.799    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[0]_3[0]
+    SLICE_X64Y114        LUT6 (Prop_lut6_I2_O)        0.124    13.923 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[0][fu][0]_i_1/O
+                         net (fo=90, routed)          0.836    14.759    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/instr_queue_q_reg[instr][3][fu][0]_0
+    SLICE_X67Y113        LUT6 (Prop_lut6_I3_O)        0.124    14.883 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3/O
+                         net (fo=4, routed)           0.424    15.307    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3_n_0
+    SLICE_X67Y112        LUT2 (Prop_lut2_I1_O)        0.124    15.431 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[0]_i_3/O
+                         net (fo=4, routed)           0.427    15.858    i_ariane/i_cva6/issue_stage_i/i_scoreboard/issue_ack_iro_sb[0]
+    SLICE_X67Y111        LUT5 (Prop_lut5_I4_O)        0.124    15.982 f  i_ariane/i_cva6/issue_stage_i/i_scoreboard/dispatch_pointer_q[0]_i_8/O
+                         net (fo=5, routed)           0.442    16.424    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[0]_2[0]
+    SLICE_X67Y109        LUT6 (Prop_lut6_I4_O)        0.124    16.548 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14/O
+                         net (fo=1, routed)           0.461    17.009    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14_n_0
+    SLICE_X57Y109        LUT6 (Prop_lut6_I3_O)        0.124    17.133 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5/O
+                         net (fo=24, routed)          0.559    17.692    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5_n_0
+    SLICE_X56Y107        LUT6 (Prop_lut6_I3_O)        0.124    17.816 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_37/O
+                         net (fo=1, routed)           0.433    18.249    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_37_n_0
+    SLICE_X57Y110        LUT5 (Prop_lut5_I4_O)        0.124    18.373 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_28/O
+                         net (fo=3, routed)           0.671    19.044    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_28_n_0
+    SLICE_X56Y110        LUT6 (Prop_lut6_I3_O)        0.124    19.168 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_35/O
+                         net (fo=1, routed)           0.587    19.755    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_35_n_0
+    SLICE_X53Y115        LUT3 (Prop_lut3_I1_O)        0.124    19.879 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_20/O
+                         net (fo=3, routed)           0.614    20.493    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_20_n_0
+    SLICE_X53Y117        LUT3 (Prop_lut3_I1_O)        0.124    20.617 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_11/O
+                         net (fo=1, routed)           0.553    21.170    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_11_n_0
+    SLICE_X53Y116        LUT6 (Prop_lut6_I4_O)        0.124    21.294 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_3/O
+                         net (fo=1, routed)           0.264    21.559    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_3_n_0
+    SLICE_X53Y116        LUT5 (Prop_lut5_I2_O)        0.124    21.683 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_1/O
+                         net (fo=1, routed)           0.000    21.683    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_n[1]
+    SLICE_X53Y116        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.633    23.488    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/clk_out1
+    SLICE_X53Y116        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[1]/C
+                         clock pessimism              0.484    23.972    
+                         clock uncertainty           -2.082    21.890    
+    SLICE_X53Y116        FDCE (Setup_fdce_C_D)        0.031    21.921    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[1]
+  -------------------------------------------------------------------
+                         required time                         21.921    
+                         arrival time                         -21.683    
+  -------------------------------------------------------------------
+                         slack                                  0.239    
+
+Slack (MET) :             0.630ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][3][1]/D
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        22.159ns  (logic 7.896ns (35.634%)  route 14.263ns (64.366%))
+  Logic Levels:           34  (CARRY4=8 LUT2=4 LUT3=3 LUT4=3 LUT5=3 LUT6=13)
+  Clock Path Skew:        -0.160ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.508ns = ( 23.492 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.863ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.829    -0.863    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X52Y109        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X52Y109        FDCE (Prop_fdce_C_Q)         0.456    -0.407 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/Q
+                         net (fo=10, routed)          0.638     0.230    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_0[0]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I0_O)        0.124     0.354 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_504/O
+                         net (fo=1, routed)           0.000     0.354    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_504_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     0.886 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.886    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.220 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.872    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.175 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.906    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     3.030 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     3.030    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.580 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.580    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.914 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.503    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.806 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     5.070    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.194 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.992    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.116 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.702    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.826 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.128    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.252 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.892 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.335    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.459 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.459    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     9.009 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     9.009    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.343 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.659    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.962 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.711    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.835 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.512    11.346    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X59Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.470 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_60/O
+                         net (fo=1, routed)           0.000    11.470    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25_0[0]
+    SLICE_X59Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    12.002 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45/CO[3]
+                         net (fo=1, routed)           0.000    12.002    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45_n_0
+    SLICE_X59Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.336 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25/O[1]
+                         net (fo=1, routed)           0.305    12.641    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_1[0]
+    SLICE_X57Y115        LUT3 (Prop_lut3_I2_O)        0.303    12.944 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_14/O
+                         net (fo=2, routed)           0.799    13.744    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return
+    SLICE_X61Y119        LUT6 (Prop_lut6_I2_O)        0.124    13.868 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9/O
+                         net (fo=1, routed)           0.288    14.156    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_n_0
+    SLICE_X63Y119        LUT6 (Prop_lut6_I0_O)        0.124    14.280 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_7/O
+                         net (fo=54, routed)          0.704    14.984    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[1]_206[0]
+    SLICE_X65Y118        LUT6 (Prop_lut6_I2_O)        0.124    15.108 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[1][fu][2]_i_1/O
+                         net (fo=23, routed)          1.095    16.203    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/issue_instr_sb_iro[1][fu][2]
+    SLICE_X80Y115        LUT6 (Prop_lut6_I2_O)        0.124    16.327 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18/O
+                         net (fo=1, routed)           0.444    16.771    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18_n_0
+    SLICE_X80Y115        LUT6 (Prop_lut6_I4_O)        0.124    16.895 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11/O
+                         net (fo=1, routed)           0.497    17.392    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11_n_0
+    SLICE_X81Y115        LUT6 (Prop_lut6_I5_O)        0.124    17.516 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_7/O
+                         net (fo=2, routed)           0.310    17.826    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q_reg[0]
+    SLICE_X80Y116        LUT6 (Prop_lut6_I0_O)        0.124    17.950 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[1]_i_2/O
+                         net (fo=14, routed)          0.540    18.490    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rm_i[0]
+    SLICE_X66Y118        LUT5 (Prop_lut5_I0_O)        0.124    18.614 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0/O
+                         net (fo=25, routed)          1.318    19.932    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0_n_0
+    SLICE_X49Y120        LUT4 (Prop_lut4_I1_O)        0.124    20.056 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][3][1]_i_7/O
+                         net (fo=1, routed)           0.299    20.355    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][3][1]_2
+    SLICE_X48Y121        LUT4 (Prop_lut4_I3_O)        0.124    20.479 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][3][1]_i_3/O
+                         net (fo=2, routed)           0.304    20.783    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][3][1]_i_3_n_0
+    SLICE_X49Y122        LUT6 (Prop_lut6_I5_O)        0.124    20.907 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][3][1]_i_4__0/O
+                         net (fo=1, routed)           0.264    21.172    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][3][1]_i_4__0_n_0
+    SLICE_X49Y122        LUT4 (Prop_lut4_I2_O)        0.124    21.296 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][3][1]_i_1/O
+                         net (fo=1, routed)           0.000    21.296    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][3][1]_i_1_n_0
+    SLICE_X49Y122        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][3][1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.637    23.492    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y122        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][3][1]/C
+                         clock pessimism              0.484    23.976    
+                         clock uncertainty           -2.082    21.894    
+    SLICE_X49Y122        FDCE (Setup_fdce_C_D)        0.031    21.925    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][3][1]
+  -------------------------------------------------------------------
+                         required time                         21.925    
+                         arrival time                         -21.296    
+  -------------------------------------------------------------------
+                         slack                                  0.630    
+
+Slack (MET) :             0.709ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][1]/D
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        22.135ns  (logic 7.896ns (35.672%)  route 14.239ns (64.327%))
+  Logic Levels:           34  (CARRY4=8 LUT2=4 LUT3=3 LUT4=1 LUT5=3 LUT6=15)
+  Clock Path Skew:        -0.153ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.501ns = ( 23.499 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.863ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.829    -0.863    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X52Y109        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X52Y109        FDCE (Prop_fdce_C_Q)         0.456    -0.407 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/Q
+                         net (fo=10, routed)          0.638     0.230    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_0[0]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I0_O)        0.124     0.354 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_504/O
+                         net (fo=1, routed)           0.000     0.354    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_504_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     0.886 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.886    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.220 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.872    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.175 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.906    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     3.030 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     3.030    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.580 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.580    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.914 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.503    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.806 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     5.070    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.194 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.992    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.116 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.702    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.826 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.128    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.252 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.892 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.335    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.459 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.459    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     9.009 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     9.009    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.343 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.659    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.962 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.711    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.835 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.512    11.346    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X59Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.470 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_60/O
+                         net (fo=1, routed)           0.000    11.470    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25_0[0]
+    SLICE_X59Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    12.002 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45/CO[3]
+                         net (fo=1, routed)           0.000    12.002    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45_n_0
+    SLICE_X59Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.336 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25/O[1]
+                         net (fo=1, routed)           0.305    12.641    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_1[0]
+    SLICE_X57Y115        LUT3 (Prop_lut3_I2_O)        0.303    12.944 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_14/O
+                         net (fo=2, routed)           0.799    13.744    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return
+    SLICE_X61Y119        LUT6 (Prop_lut6_I2_O)        0.124    13.868 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9/O
+                         net (fo=1, routed)           0.288    14.156    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_n_0
+    SLICE_X63Y119        LUT6 (Prop_lut6_I0_O)        0.124    14.280 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_7/O
+                         net (fo=54, routed)          0.704    14.984    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[1]_206[0]
+    SLICE_X65Y118        LUT6 (Prop_lut6_I2_O)        0.124    15.108 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[1][fu][2]_i_1/O
+                         net (fo=23, routed)          1.095    16.203    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/issue_instr_sb_iro[1][fu][2]
+    SLICE_X80Y115        LUT6 (Prop_lut6_I2_O)        0.124    16.327 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18/O
+                         net (fo=1, routed)           0.444    16.771    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18_n_0
+    SLICE_X80Y115        LUT6 (Prop_lut6_I4_O)        0.124    16.895 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11/O
+                         net (fo=1, routed)           0.497    17.392    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11_n_0
+    SLICE_X81Y115        LUT6 (Prop_lut6_I5_O)        0.124    17.516 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_7/O
+                         net (fo=2, routed)           0.310    17.826    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q_reg[0]
+    SLICE_X80Y116        LUT6 (Prop_lut6_I0_O)        0.124    17.950 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[1]_i_2/O
+                         net (fo=14, routed)          0.540    18.490    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rm_i[0]
+    SLICE_X66Y118        LUT5 (Prop_lut5_I0_O)        0.124    18.614 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0/O
+                         net (fo=25, routed)          1.024    19.638    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0_n_0
+    SLICE_X52Y121        LUT4 (Prop_lut4_I1_O)        0.124    19.762 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9/O
+                         net (fo=1, routed)           0.294    20.056    i_ariane/i_cva6/issue_stage_i/i_scoreboard/rs_q_reg[valid_regs][0][1]_3
+    SLICE_X50Y121        LUT6 (Prop_lut6_I1_O)        0.124    20.180 f  i_ariane/i_cva6/issue_stage_i/i_scoreboard/rs_q_reg[valids][0][1]_i_5/O
+                         net (fo=2, routed)           0.531    20.712    i_ariane/i_cva6/id_stage_i/rs_q_reg[valid_regs][0][1]_1
+    SLICE_X47Y118        LUT6 (Prop_lut6_I5_O)        0.124    20.836 r  i_ariane/i_cva6/id_stage_i/rs_q_reg[valids][0][1]_i_2/O
+                         net (fo=1, routed)           0.312    21.148    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][1]_1
+    SLICE_X46Y117        LUT6 (Prop_lut6_I1_O)        0.124    21.272 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][0][1]_i_1__0/O
+                         net (fo=1, routed)           0.000    21.272    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][0][1]_i_1__0_n_0
+    SLICE_X46Y117        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.644    23.499    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/clk_out1
+    SLICE_X46Y117        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][1]/C
+                         clock pessimism              0.484    23.983    
+                         clock uncertainty           -2.082    21.901    
+    SLICE_X46Y117        FDCE (Setup_fdce_C_D)        0.079    21.980    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][1]
+  -------------------------------------------------------------------
+                         required time                         21.980    
+                         arrival time                         -21.272    
+  -------------------------------------------------------------------
+                         slack                                  0.709    
+
+Slack (MET) :             0.720ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][0]/D
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        22.052ns  (logic 7.914ns (35.887%)  route 14.138ns (64.113%))
+  Logic Levels:           34  (CARRY4=8 LUT2=4 LUT3=3 LUT4=1 LUT5=4 LUT6=14)
+  Clock Path Skew:        -0.174ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.510ns = ( 23.490 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.851ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.841    -0.851    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y108        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X49Y108        FDCE (Prop_fdce_C_Q)         0.456    -0.395 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/Q
+                         net (fo=9, routed)           0.503     0.108    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_2[1]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I1_O)        0.124     0.232 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503/O
+                         net (fo=1, routed)           0.000     0.232    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     0.782 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.782    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.116 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.071 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.802    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     2.926 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     2.926    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.476 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.476    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.810 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.398    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.701 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     4.965    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.089 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.887    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.011 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.597    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.721 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.023    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.147 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.664    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.788 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.231    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.355 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.355    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     8.905 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     8.905    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.239 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.555    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.858 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.606    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.730 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.512    11.242    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X59Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.366 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_60/O
+                         net (fo=1, routed)           0.000    11.366    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25_0[0]
+    SLICE_X59Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.898 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45/CO[3]
+                         net (fo=1, routed)           0.000    11.898    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45_n_0
+    SLICE_X59Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.232 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25/O[1]
+                         net (fo=1, routed)           0.305    12.537    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_1[0]
+    SLICE_X57Y115        LUT3 (Prop_lut3_I2_O)        0.303    12.840 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_14/O
+                         net (fo=2, routed)           0.799    13.639    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return
+    SLICE_X61Y119        LUT6 (Prop_lut6_I2_O)        0.124    13.763 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9/O
+                         net (fo=1, routed)           0.288    14.052    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_n_0
+    SLICE_X63Y119        LUT6 (Prop_lut6_I0_O)        0.124    14.176 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_7/O
+                         net (fo=54, routed)          0.704    14.880    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[1]_206[0]
+    SLICE_X65Y118        LUT6 (Prop_lut6_I2_O)        0.124    15.004 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[1][fu][2]_i_1/O
+                         net (fo=23, routed)          1.095    16.098    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/issue_instr_sb_iro[1][fu][2]
+    SLICE_X80Y115        LUT6 (Prop_lut6_I2_O)        0.124    16.222 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18/O
+                         net (fo=1, routed)           0.444    16.666    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18_n_0
+    SLICE_X80Y115        LUT6 (Prop_lut6_I4_O)        0.124    16.790 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11/O
+                         net (fo=1, routed)           0.497    17.288    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11_n_0
+    SLICE_X81Y115        LUT6 (Prop_lut6_I5_O)        0.124    17.412 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_7/O
+                         net (fo=2, routed)           0.310    17.722    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q_reg[0]
+    SLICE_X80Y116        LUT6 (Prop_lut6_I0_O)        0.124    17.846 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[1]_i_2/O
+                         net (fo=14, routed)          0.540    18.386    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rm_i[0]
+    SLICE_X66Y118        LUT5 (Prop_lut5_I0_O)        0.124    18.510 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0/O
+                         net (fo=25, routed)          0.827    19.336    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0_n_0
+    SLICE_X57Y118        LUT4 (Prop_lut4_I3_O)        0.124    19.460 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][0]_i_2__0/O
+                         net (fo=2, routed)           0.353    19.813    i_ariane/i_cva6/issue_stage_i/i_issue_register_allocation_table/rs_q_reg[valids][0][0]_i_4
+    SLICE_X54Y119        LUT6 (Prop_lut6_I0_O)        0.124    19.937 f  i_ariane/i_cva6/issue_stage_i/i_issue_register_allocation_table/rs_q_reg[valids][0][0]_i_12/O
+                         net (fo=1, routed)           0.282    20.219    i_ariane/i_cva6/issue_stage_i/i_scoreboard/rs_q_reg[valid_regs][0][0]_2
+    SLICE_X54Y119        LUT6 (Prop_lut6_I2_O)        0.124    20.343 r  i_ariane/i_cva6/issue_stage_i/i_scoreboard/rs_q_reg[valids][0][0]_i_4/O
+                         net (fo=1, routed)           0.734    21.077    i_ariane/i_cva6/issue_stage_i/i_scoreboard/rs_n[valid_regs][0]_12[0]
+    SLICE_X51Y113        LUT5 (Prop_lut5_I3_O)        0.124    21.201 r  i_ariane/i_cva6/issue_stage_i/i_scoreboard/rs_q_reg[valids][0][0]_i_1__0/O
+                         net (fo=1, routed)           0.000    21.201    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][0]_1
+    SLICE_X51Y113        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.635    23.490    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X51Y113        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][0]/C
+                         clock pessimism              0.484    23.974    
+                         clock uncertainty           -2.082    21.892    
+    SLICE_X51Y113        FDCE (Setup_fdce_C_D)        0.029    21.921    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[valid_regs][0][0]
+  -------------------------------------------------------------------
+                         required time                         21.921    
+                         arrival time                         -21.201    
+  -------------------------------------------------------------------
+                         slack                                  0.720    
+
+Slack (MET) :             0.789ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][0]/D
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        21.971ns  (logic 7.914ns (36.020%)  route 14.057ns (63.980%))
+  Logic Levels:           34  (CARRY4=8 LUT2=4 LUT3=4 LUT4=1 LUT5=4 LUT6=13)
+  Clock Path Skew:        -0.186ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.522ns = ( 23.478 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.851ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.841    -0.851    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y108        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X49Y108        FDCE (Prop_fdce_C_Q)         0.456    -0.395 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/Q
+                         net (fo=9, routed)           0.503     0.108    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_2[1]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I1_O)        0.124     0.232 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503/O
+                         net (fo=1, routed)           0.000     0.232    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     0.782 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.782    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.116 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.071 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.802    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     2.926 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     2.926    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.476 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.476    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.810 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.398    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.701 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     4.965    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.089 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.887    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.011 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.597    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.721 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.023    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.147 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.664    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.788 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.231    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.355 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.355    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     8.905 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     8.905    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.239 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.555    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.858 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.606    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.730 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.512    11.242    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X59Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.366 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_60/O
+                         net (fo=1, routed)           0.000    11.366    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25_0[0]
+    SLICE_X59Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.898 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45/CO[3]
+                         net (fo=1, routed)           0.000    11.898    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45_n_0
+    SLICE_X59Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.232 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25/O[1]
+                         net (fo=1, routed)           0.305    12.537    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_1[0]
+    SLICE_X57Y115        LUT3 (Prop_lut3_I2_O)        0.303    12.840 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_14/O
+                         net (fo=2, routed)           0.799    13.639    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return
+    SLICE_X61Y119        LUT6 (Prop_lut6_I2_O)        0.124    13.763 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9/O
+                         net (fo=1, routed)           0.288    14.052    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_n_0
+    SLICE_X63Y119        LUT6 (Prop_lut6_I0_O)        0.124    14.176 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_7/O
+                         net (fo=54, routed)          0.704    14.880    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[1]_206[0]
+    SLICE_X65Y118        LUT6 (Prop_lut6_I2_O)        0.124    15.004 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[1][fu][2]_i_1/O
+                         net (fo=23, routed)          1.095    16.098    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/issue_instr_sb_iro[1][fu][2]
+    SLICE_X80Y115        LUT6 (Prop_lut6_I2_O)        0.124    16.222 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18/O
+                         net (fo=1, routed)           0.444    16.666    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18_n_0
+    SLICE_X80Y115        LUT6 (Prop_lut6_I4_O)        0.124    16.790 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11/O
+                         net (fo=1, routed)           0.497    17.288    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11_n_0
+    SLICE_X81Y115        LUT6 (Prop_lut6_I5_O)        0.124    17.412 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_7/O
+                         net (fo=2, routed)           0.310    17.722    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q_reg[0]
+    SLICE_X80Y116        LUT6 (Prop_lut6_I0_O)        0.124    17.846 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[1]_i_2/O
+                         net (fo=14, routed)          0.540    18.386    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rm_i[0]
+    SLICE_X66Y118        LUT5 (Prop_lut5_I0_O)        0.124    18.510 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0/O
+                         net (fo=25, routed)          1.206    19.715    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0_n_0
+    SLICE_X52Y124        LUT4 (Prop_lut4_I3_O)        0.124    19.839 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][1][0]_i_2/O
+                         net (fo=2, routed)           0.352    20.191    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][0]_0
+    SLICE_X53Y124        LUT6 (Prop_lut6_I3_O)        0.124    20.315 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][0]_i_10/O
+                         net (fo=1, routed)           0.154    20.469    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][0]_i_10_n_0
+    SLICE_X53Y124        LUT3 (Prop_lut3_I2_O)        0.124    20.593 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][0]_i_4__0/O
+                         net (fo=1, routed)           0.403    20.996    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][0]_i_4__0_n_0
+    SLICE_X53Y124        LUT5 (Prop_lut5_I3_O)        0.124    21.120 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][0]_i_1/O
+                         net (fo=1, routed)           0.000    21.120    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][0]_i_1_n_0
+    SLICE_X53Y124        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.623    23.478    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/clk_out1
+    SLICE_X53Y124        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][0]/C
+                         clock pessimism              0.484    23.962    
+                         clock uncertainty           -2.082    21.880    
+    SLICE_X53Y124        FDCE (Setup_fdce_C_D)        0.029    21.909    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][0]
+  -------------------------------------------------------------------
+                         required time                         21.909    
+                         arrival time                         -21.120    
+  -------------------------------------------------------------------
+                         slack                                  0.789    
+
+Slack (MET) :             0.790ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][1]/D
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        22.019ns  (logic 7.914ns (35.942%)  route 14.105ns (64.058%))
+  Logic Levels:           34  (CARRY4=8 LUT2=4 LUT3=3 LUT4=1 LUT5=4 LUT6=14)
+  Clock Path Skew:        -0.186ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.522ns = ( 23.478 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.851ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.841    -0.851    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y108        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X49Y108        FDCE (Prop_fdce_C_Q)         0.456    -0.395 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/Q
+                         net (fo=9, routed)           0.503     0.108    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_2[1]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I1_O)        0.124     0.232 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503/O
+                         net (fo=1, routed)           0.000     0.232    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     0.782 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.782    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.116 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.071 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.802    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     2.926 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     2.926    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.476 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.476    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.810 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.398    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.701 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     4.965    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.089 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.887    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.011 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.597    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.721 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.023    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.147 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.664    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.788 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.231    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.355 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.355    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     8.905 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     8.905    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.239 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.555    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.858 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.606    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.730 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.512    11.242    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X59Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.366 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_60/O
+                         net (fo=1, routed)           0.000    11.366    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25_0[0]
+    SLICE_X59Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.898 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45/CO[3]
+                         net (fo=1, routed)           0.000    11.898    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45_n_0
+    SLICE_X59Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.232 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25/O[1]
+                         net (fo=1, routed)           0.305    12.537    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_1[0]
+    SLICE_X57Y115        LUT3 (Prop_lut3_I2_O)        0.303    12.840 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_14/O
+                         net (fo=2, routed)           0.799    13.639    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return
+    SLICE_X61Y119        LUT6 (Prop_lut6_I2_O)        0.124    13.763 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9/O
+                         net (fo=1, routed)           0.288    14.052    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_n_0
+    SLICE_X63Y119        LUT6 (Prop_lut6_I0_O)        0.124    14.176 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_7/O
+                         net (fo=54, routed)          0.704    14.880    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[1]_206[0]
+    SLICE_X65Y118        LUT6 (Prop_lut6_I2_O)        0.124    15.004 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[1][fu][2]_i_1/O
+                         net (fo=23, routed)          1.095    16.098    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/issue_instr_sb_iro[1][fu][2]
+    SLICE_X80Y115        LUT6 (Prop_lut6_I2_O)        0.124    16.222 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18/O
+                         net (fo=1, routed)           0.444    16.666    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18_n_0
+    SLICE_X80Y115        LUT6 (Prop_lut6_I4_O)        0.124    16.790 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11/O
+                         net (fo=1, routed)           0.497    17.288    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11_n_0
+    SLICE_X81Y115        LUT6 (Prop_lut6_I5_O)        0.124    17.412 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_7/O
+                         net (fo=2, routed)           0.310    17.722    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q_reg[0]
+    SLICE_X80Y116        LUT6 (Prop_lut6_I0_O)        0.124    17.846 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[1]_i_2/O
+                         net (fo=14, routed)          0.540    18.386    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rm_i[0]
+    SLICE_X66Y118        LUT5 (Prop_lut5_I0_O)        0.124    18.510 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0/O
+                         net (fo=25, routed)          1.255    19.765    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][0][1]_i_9__0_n_0
+    SLICE_X50Y124        LUT4 (Prop_lut4_I1_O)        0.124    19.889 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q_reg[valids][1][1]_i_10/O
+                         net (fo=1, routed)           0.282    20.171    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][1]_4
+    SLICE_X50Y124        LUT6 (Prop_lut6_I5_O)        0.124    20.295 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][1]_i_4/O
+                         net (fo=2, routed)           0.173    20.468    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][1]_i_4_n_0
+    SLICE_X50Y124        LUT6 (Prop_lut6_I0_O)        0.124    20.592 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][1]_i_2/O
+                         net (fo=1, routed)           0.452    21.043    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][1]_i_2_n_0
+    SLICE_X50Y124        LUT5 (Prop_lut5_I1_O)        0.124    21.167 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][1]_i_1__0/O
+                         net (fo=1, routed)           0.000    21.167    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valids][1][1]_i_1__0_n_0
+    SLICE_X50Y124        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.623    23.478    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/clk_out1
+    SLICE_X50Y124        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][1]/C
+                         clock pessimism              0.484    23.962    
+                         clock uncertainty           -2.082    21.880    
+    SLICE_X50Y124        FDCE (Setup_fdce_C_D)        0.077    21.957    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/rs_q_reg[valid_regs][1][1]
+  -------------------------------------------------------------------
+                         required time                         21.957    
+                         arrival time                         -21.167    
+  -------------------------------------------------------------------
+                         slack                                  0.790    
+
+Slack (MET) :             0.804ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[0]/D
+                            (rising edge-triggered cell FDPE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        21.970ns  (logic 7.914ns (36.023%)  route 14.056ns (63.977%))
+  Logic Levels:           34  (CARRY4=8 LUT2=6 LUT3=3 LUT5=4 LUT6=13)
+  Clock Path Skew:        -0.176ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.512ns = ( 23.488 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.851ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.841    -0.851    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y108        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X49Y108        FDCE (Prop_fdce_C_Q)         0.456    -0.395 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/Q
+                         net (fo=9, routed)           0.503     0.108    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_2[1]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I1_O)        0.124     0.232 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503/O
+                         net (fo=1, routed)           0.000     0.232    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     0.782 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.782    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.116 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.071 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.802    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     2.926 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     2.926    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.476 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.476    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.810 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.398    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.701 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     4.965    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.089 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.887    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.011 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.597    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.721 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.023    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.147 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.664    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.788 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.231    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.355 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.355    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     8.905 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     8.905    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.239 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.555    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.858 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.606    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.730 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.331    11.061    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X60Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.185 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_397/O
+                         net (fo=1, routed)           0.000    11.185    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262_0[0]
+    SLICE_X60Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.717 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336/CO[3]
+                         net (fo=1, routed)           0.000    11.717    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336_n_0
+    SLICE_X60Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.051 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262/O[1]
+                         net (fo=1, routed)           0.302    12.353    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_0[0]
+    SLICE_X62Y114        LUT3 (Prop_lut3_I2_O)        0.303    12.656 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_125/O
+                         net (fo=4, routed)           0.329    12.985    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return6_out
+    SLICE_X63Y115        LUT6 (Prop_lut6_I0_O)        0.124    13.109 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_39/O
+                         net (fo=54, routed)          0.690    13.799    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[0]_3[0]
+    SLICE_X64Y114        LUT6 (Prop_lut6_I2_O)        0.124    13.923 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[0][fu][0]_i_1/O
+                         net (fo=90, routed)          0.836    14.759    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/instr_queue_q_reg[instr][3][fu][0]_0
+    SLICE_X67Y113        LUT6 (Prop_lut6_I3_O)        0.124    14.883 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3/O
+                         net (fo=4, routed)           0.424    15.307    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3_n_0
+    SLICE_X67Y112        LUT2 (Prop_lut2_I1_O)        0.124    15.431 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[0]_i_3/O
+                         net (fo=4, routed)           0.427    15.858    i_ariane/i_cva6/issue_stage_i/i_scoreboard/issue_ack_iro_sb[0]
+    SLICE_X67Y111        LUT5 (Prop_lut5_I4_O)        0.124    15.982 f  i_ariane/i_cva6/issue_stage_i/i_scoreboard/dispatch_pointer_q[0]_i_8/O
+                         net (fo=5, routed)           0.442    16.424    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[0]_2[0]
+    SLICE_X67Y109        LUT6 (Prop_lut6_I4_O)        0.124    16.548 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14/O
+                         net (fo=1, routed)           0.461    17.009    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14_n_0
+    SLICE_X57Y109        LUT6 (Prop_lut6_I3_O)        0.124    17.133 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5/O
+                         net (fo=24, routed)          0.726    17.859    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5_n_0
+    SLICE_X56Y113        LUT2 (Prop_lut2_I1_O)        0.124    17.983 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[0]_i_12/O
+                         net (fo=3, routed)           0.905    18.888    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[0]_i_12_n_0
+    SLICE_X54Y115        LUT6 (Prop_lut6_I1_O)        0.124    19.012 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_16/O
+                         net (fo=3, routed)           0.695    19.707    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_16_n_0
+    SLICE_X54Y115        LUT6 (Prop_lut6_I2_O)        0.124    19.831 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_6/O
+                         net (fo=7, routed)           0.545    20.376    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_6_n_0
+    SLICE_X54Y116        LUT5 (Prop_lut5_I1_O)        0.124    20.500 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[0]_i_5/O
+                         net (fo=1, routed)           0.495    20.994    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[0]_i_5_n_0
+    SLICE_X53Y116        LUT6 (Prop_lut6_I4_O)        0.124    21.118 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[0]_i_1/O
+                         net (fo=1, routed)           0.000    21.118    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[0]_i_1_n_0
+    SLICE_X53Y116        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.633    23.488    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/clk_out1
+    SLICE_X53Y116        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[0]/C
+                         clock pessimism              0.484    23.972    
+                         clock uncertainty           -2.082    21.890    
+    SLICE_X53Y116        FDPE (Setup_fdpe_C_D)        0.032    21.922    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[0]
+  -------------------------------------------------------------------
+                         required time                         21.922    
+                         arrival time                         -21.118    
+  -------------------------------------------------------------------
+                         slack                                  0.804    
+
+Slack (MET) :             0.807ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[free_entries][0]/D
+                            (rising edge-triggered cell FDPE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        21.968ns  (logic 7.790ns (35.460%)  route 14.178ns (64.540%))
+  Logic Levels:           33  (CARRY4=8 LUT2=4 LUT3=3 LUT5=3 LUT6=15)
+  Clock Path Skew:        -0.173ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.509ns = ( 23.491 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.851ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.841    -0.851    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y108        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X49Y108        FDCE (Prop_fdce_C_Q)         0.456    -0.395 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/Q
+                         net (fo=9, routed)           0.503     0.108    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_2[1]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I1_O)        0.124     0.232 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503/O
+                         net (fo=1, routed)           0.000     0.232    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     0.782 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.782    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.116 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.071 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.802    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     2.926 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     2.926    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.476 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.476    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.810 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.398    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.701 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     4.965    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.089 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.887    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.011 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.597    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.721 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.023    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.147 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.664    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.788 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.231    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.355 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.355    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     8.905 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     8.905    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.239 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.555    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.858 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.606    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.730 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.512    11.242    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X59Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.366 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_60/O
+                         net (fo=1, routed)           0.000    11.366    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25_0[0]
+    SLICE_X59Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.898 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45/CO[3]
+                         net (fo=1, routed)           0.000    11.898    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_45_n_0
+    SLICE_X59Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.232 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_25/O[1]
+                         net (fo=1, routed)           0.305    12.537    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_1[0]
+    SLICE_X57Y115        LUT3 (Prop_lut3_I2_O)        0.303    12.840 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_14/O
+                         net (fo=2, routed)           0.799    13.639    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return
+    SLICE_X61Y119        LUT6 (Prop_lut6_I2_O)        0.124    13.763 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9/O
+                         net (fo=1, routed)           0.288    14.052    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_n_0
+    SLICE_X63Y119        LUT6 (Prop_lut6_I0_O)        0.124    14.176 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_7/O
+                         net (fo=54, routed)          0.704    14.880    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[1]_206[0]
+    SLICE_X65Y118        LUT6 (Prop_lut6_I2_O)        0.124    15.004 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[1][fu][2]_i_1/O
+                         net (fo=23, routed)          1.095    16.098    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/issue_instr_sb_iro[1][fu][2]
+    SLICE_X80Y115        LUT6 (Prop_lut6_I2_O)        0.124    16.222 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18/O
+                         net (fo=1, routed)           0.444    16.666    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_18_n_0
+    SLICE_X80Y115        LUT6 (Prop_lut6_I4_O)        0.124    16.790 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11/O
+                         net (fo=1, routed)           0.497    17.288    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_11_n_0
+    SLICE_X81Y115        LUT6 (Prop_lut6_I5_O)        0.124    17.412 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q[1]_i_7/O
+                         net (fo=2, routed)           0.310    17.722    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/mult_valid_q_reg[0]
+    SLICE_X80Y116        LUT6 (Prop_lut6_I0_O)        0.124    17.846 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[1]_i_2/O
+                         net (fo=14, routed)          1.032    18.878    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rm_i[0]
+    SLICE_X56Y110        LUT5 (Prop_lut5_I2_O)        0.124    19.002 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/rs_q[free_entries][0]_i_10/O
+                         net (fo=1, routed)           0.596    19.598    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q[free_entries][0]_i_2_2
+    SLICE_X55Y109        LUT6 (Prop_lut6_I5_O)        0.124    19.722 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q[free_entries][0]_i_6__0/O
+                         net (fo=1, routed)           0.464    20.185    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q[free_entries][0]_i_6__0_n_0
+    SLICE_X56Y109        LUT6 (Prop_lut6_I5_O)        0.124    20.309 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q[free_entries][0]_i_2/O
+                         net (fo=1, routed)           0.683    20.993    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q[free_entries][0]_i_2_n_0
+    SLICE_X53Y112        LUT6 (Prop_lut6_I3_O)        0.124    21.117 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q[free_entries][0]_i_1__0/O
+                         net (fo=1, routed)           0.000    21.117    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q[free_entries][0]_i_1__0_n_0
+    SLICE_X53Y112        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[free_entries][0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.636    23.491    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X53Y112        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[free_entries][0]/C
+                         clock pessimism              0.484    23.975    
+                         clock uncertainty           -2.082    21.893    
+    SLICE_X53Y112        FDPE (Setup_fdpe_C_D)        0.031    21.924    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[free_entries][0]
+  -------------------------------------------------------------------
+                         required time                         21.924    
+                         arrival time                         -21.117    
+  -------------------------------------------------------------------
+                         slack                                  0.807    
+
+Slack (MET) :             0.836ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[1]/D
+                            (rising edge-triggered cell FDPE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        22.169ns  (logic 7.896ns (35.618%)  route 14.273ns (64.382%))
+  Logic Levels:           34  (CARRY4=8 LUT2=6 LUT3=3 LUT5=4 LUT6=13)
+  Clock Path Skew:        0.006ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.442ns = ( 23.558 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.863ns
+    Clock Pessimism Removal (CPR):    0.585ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.829    -0.863    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X52Y109        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X52Y109        FDCE (Prop_fdce_C_Q)         0.456    -0.407 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][1][global_rs_id][0]/Q
+                         net (fo=10, routed)          0.638     0.230    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_0[0]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I0_O)        0.124     0.354 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_504/O
+                         net (fo=1, routed)           0.000     0.354    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_504_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     0.886 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.886    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.220 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.872    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.175 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.906    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     3.030 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     3.030    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.580 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.580    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.914 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.503    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.806 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     5.070    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.194 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.992    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.116 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.702    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.826 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.128    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.252 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.892 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.335    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.459 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.459    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     9.009 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     9.009    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.343 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.659    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.962 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.711    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.835 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.331    11.165    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X60Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.289 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_397/O
+                         net (fo=1, routed)           0.000    11.289    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262_0[0]
+    SLICE_X60Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.821 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336/CO[3]
+                         net (fo=1, routed)           0.000    11.821    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336_n_0
+    SLICE_X60Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.155 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262/O[1]
+                         net (fo=1, routed)           0.302    12.458    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_0[0]
+    SLICE_X62Y114        LUT3 (Prop_lut3_I2_O)        0.303    12.761 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_125/O
+                         net (fo=4, routed)           0.329    13.090    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return6_out
+    SLICE_X63Y115        LUT6 (Prop_lut6_I0_O)        0.124    13.214 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_39/O
+                         net (fo=54, routed)          0.690    13.903    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[0]_3[0]
+    SLICE_X64Y114        LUT6 (Prop_lut6_I2_O)        0.124    14.027 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[0][fu][0]_i_1/O
+                         net (fo=90, routed)          0.836    14.864    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/instr_queue_q_reg[instr][3][fu][0]_0
+    SLICE_X67Y113        LUT6 (Prop_lut6_I3_O)        0.124    14.988 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3/O
+                         net (fo=4, routed)           0.424    15.412    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3_n_0
+    SLICE_X67Y112        LUT2 (Prop_lut2_I1_O)        0.124    15.536 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[0]_i_3/O
+                         net (fo=4, routed)           0.427    15.963    i_ariane/i_cva6/issue_stage_i/i_scoreboard/issue_ack_iro_sb[0]
+    SLICE_X67Y111        LUT5 (Prop_lut5_I4_O)        0.124    16.087 f  i_ariane/i_cva6/issue_stage_i/i_scoreboard/dispatch_pointer_q[0]_i_8/O
+                         net (fo=5, routed)           0.442    16.529    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[0]_2[0]
+    SLICE_X67Y109        LUT6 (Prop_lut6_I4_O)        0.124    16.653 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14/O
+                         net (fo=1, routed)           0.461    17.114    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14_n_0
+    SLICE_X57Y109        LUT6 (Prop_lut6_I3_O)        0.124    17.238 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5/O
+                         net (fo=24, routed)          0.726    17.964    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5_n_0
+    SLICE_X56Y113        LUT2 (Prop_lut2_I1_O)        0.124    18.088 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[0]_i_12/O
+                         net (fo=3, routed)           0.905    18.992    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[0]_i_12_n_0
+    SLICE_X54Y115        LUT6 (Prop_lut6_I1_O)        0.124    19.116 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_16/O
+                         net (fo=3, routed)           0.695    19.812    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_16_n_0
+    SLICE_X54Y115        LUT6 (Prop_lut6_I2_O)        0.124    19.936 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_6/O
+                         net (fo=7, routed)           0.555    20.490    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_6_n_0
+    SLICE_X54Y116        LUT5 (Prop_lut5_I1_O)        0.124    20.614 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[1]_i_5/O
+                         net (fo=1, routed)           0.567    21.181    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[1]_i_5_n_0
+    SLICE_X54Y116        LUT6 (Prop_lut6_I4_O)        0.124    21.305 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[1]_i_1/O
+                         net (fo=1, routed)           0.000    21.305    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[1]_i_1_n_0
+    SLICE_X54Y116        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.703    23.558    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/clk_out1
+    SLICE_X54Y116        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[1]/C
+                         clock pessimism              0.585    24.143    
+                         clock uncertainty           -2.082    22.061    
+    SLICE_X54Y116        FDPE (Setup_fdpe_C_D)        0.081    22.142    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[1]
+  -------------------------------------------------------------------
+                         required time                         22.142    
+                         arrival time                         -21.305    
+  -------------------------------------------------------------------
+                         slack                                  0.836    
+
+Slack (MET) :             0.851ns  (required time - arrival time)
+  Source:                 i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+                            (rising edge-triggered cell FDCE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Destination:            i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[2]/D
+                            (rising edge-triggered cell FDPE clocked by clk_out1_xlnx_clk_gen  {rise@0.000ns fall@12.500ns period=25.000ns})
+  Path Group:             clk_out1_xlnx_clk_gen
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            25.000ns  (clk_out1_xlnx_clk_gen rise@25.000ns - clk_out1_xlnx_clk_gen rise@0.000ns)
+  Data Path Delay:        21.920ns  (logic 7.914ns (36.104%)  route 14.006ns (63.896%))
+  Logic Levels:           34  (CARRY4=8 LUT2=6 LUT3=3 LUT5=4 LUT6=13)
+  Clock Path Skew:        -0.175ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.511ns = ( 23.489 - 25.000 ) 
+    Source Clock Delay      (SCD):    -0.851ns
+    Clock Pessimism Removal (CPR):    0.484ns
+  Clock Uncertainty:      2.082ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE + UU
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.149ns
+    Phase Error              (PE):    0.000ns
+    User Uncertainty         (UU):    2.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                      0.000     0.000 r  
+    K17                                               0.000     0.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000     0.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.475     1.475 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.285     2.760    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.759    -4.999 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.206    -2.793    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.101    -2.692 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.841    -0.851    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/clk_out1
+    SLICE_X49Y108        FDCE                                         r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X49Y108        FDCE (Prop_fdce_C_Q)         0.456    -0.395 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/rs_q_reg[rs_table][0][global_rs_id][1]/Q
+                         net (fo=9, routed)           0.503     0.108    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_386_2[1]
+    SLICE_X52Y108        LUT2 (Prop_lut2_I1_O)        0.124     0.232 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503/O
+                         net (fo=1, routed)           0.000     0.232    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_503_n_0
+    SLICE_X52Y108        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     0.782 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444/CO[3]
+                         net (fo=1, routed)           0.000     0.782    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_444_n_0
+    SLICE_X52Y109        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     1.116 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_380/O[1]
+                         net (fo=1, routed)           0.652     1.768    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree51_out[5]
+    SLICE_X53Y111        LUT5 (Prop_lut5_I4_O)        0.303     2.071 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_316/O
+                         net (fo=15, routed)          0.731     2.802    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/valid_tree16_out
+    SLICE_X52Y110        LUT6 (Prop_lut6_I3_O)        0.124     2.926 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459/O
+                         net (fo=1, routed)           0.000     2.926    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_459_n_0
+    SLICE_X52Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     3.476 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387/CO[3]
+                         net (fo=1, routed)           0.000     3.476    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_387_n_0
+    SLICE_X52Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     3.810 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_322/O[1]
+                         net (fo=1, routed)           0.589     4.398    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree50_out[5]
+    SLICE_X51Y112        LUT6 (Prop_lut6_I5_O)        0.303     4.701 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_258/O
+                         net (fo=44, routed)          0.264     4.965    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/id_tree1
+    SLICE_X51Y112        LUT3 (Prop_lut3_I1_O)        0.124     5.089 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_259/O
+                         net (fo=42, routed)          0.798     5.887    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/winner_o[0]
+    SLICE_X54Y111        LUT6 (Prop_lut6_I4_O)        0.124     6.011 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7/O
+                         net (fo=2, routed)           0.586     6.597    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][trans_id][2]_i_7_n_0
+    SLICE_X55Y109        LUT6 (Prop_lut6_I0_O)        0.124     6.721 f  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257/O
+                         net (fo=1, routed)           0.302     7.023    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_257_n_0
+    SLICE_X54Y110        LUT6 (Prop_lut6_I5_O)        0.124     7.147 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_123/O
+                         net (fo=62, routed)          0.517     7.664    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_q_reg[rs_table][2][fu][1]
+    SLICE_X54Y109        LUT2 (Prop_lut2_I0_O)        0.124     7.788 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[0].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/fu_data_q[1][global_id][1]_i_3/O
+                         net (fo=7, routed)           0.443     8.231    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/rs_global_id[0]_254[1]
+    SLICE_X55Y110        LUT2 (Prop_lut2_I1_O)        0.124     8.355 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_470/O
+                         net (fo=1, routed)           0.000     8.355    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/S[1]
+    SLICE_X55Y110        CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.550     8.905 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398/CO[3]
+                         net (fo=1, routed)           0.000     8.905    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_398_n_0
+    SLICE_X55Y111        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334     9.239 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_344/O[1]
+                         net (fo=1, routed)           0.316     9.555    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_128_0[0]
+    SLICE_X54Y112        LUT3 (Prop_lut3_I2_O)        0.303     9.858 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_267/O
+                         net (fo=21, routed)          0.748    10.606    i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/i_global_tournament_tree/is_older_return9_out
+    SLICE_X56Y113        LUT5 (Prop_lut5_I0_O)        0.124    10.730 r  i_ariane/i_cva6/issue_stage_i/gen_rs_blocks[1].rs_instance.i_reservation_station/i_tournament_tree_oldest_valid/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_331/O
+                         net (fo=4, routed)           0.331    11.061    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/first_seq[0]
+    SLICE_X60Y113        LUT2 (Prop_lut2_I1_O)        0.124    11.185 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_397/O
+                         net (fo=1, routed)           0.000    11.185    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262_0[0]
+    SLICE_X60Y113        CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532    11.717 r  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336/CO[3]
+                         net (fo=1, routed)           0.000    11.717    i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_336_n_0
+    SLICE_X60Y114        CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.334    12.051 f  i_ariane/i_cva6/issue_stage_i/i_global_tournament_tree/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_262/O[1]
+                         net (fo=1, routed)           0.302    12.353    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r3_0_63_0_2_i_9_0[0]
+    SLICE_X62Y114        LUT3 (Prop_lut3_I2_O)        0.303    12.656 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_125/O
+                         net (fo=4, routed)           0.329    12.985    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/i_global_tournament_tree/is_older_return6_out
+    SLICE_X63Y115        LUT6 (Prop_lut6_I0_O)        0.124    13.109 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/regfile_ram_block[3].mem_reg[3][47]_r1_0_63_0_2_i_39/O
+                         net (fo=54, routed)          0.690    13.799    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/winner[0]_3[0]
+    SLICE_X64Y114        LUT6 (Prop_lut6_I2_O)        0.124    13.923 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/fu_data_q[0][fu][0]_i_1/O
+                         net (fo=90, routed)          0.836    14.759    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/instr_queue_q_reg[instr][3][fu][0]_0
+    SLICE_X67Y113        LUT6 (Prop_lut6_I3_O)        0.124    14.883 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3/O
+                         net (fo=4, routed)           0.424    15.307    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/branch_valid_q[0]_i_3_n_0
+    SLICE_X67Y112        LUT2 (Prop_lut2_I1_O)        0.124    15.431 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/ld_we_q[0]_i_3/O
+                         net (fo=4, routed)           0.427    15.858    i_ariane/i_cva6/issue_stage_i/i_scoreboard/issue_ack_iro_sb[0]
+    SLICE_X67Y111        LUT5 (Prop_lut5_I4_O)        0.124    15.982 f  i_ariane/i_cva6/issue_stage_i/i_scoreboard/dispatch_pointer_q[0]_i_8/O
+                         net (fo=5, routed)           0.442    16.424    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q_reg[0]_2[0]
+    SLICE_X67Y109        LUT6 (Prop_lut6_I4_O)        0.124    16.548 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14/O
+                         net (fo=1, routed)           0.461    17.009    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_14_n_0
+    SLICE_X57Y109        LUT6 (Prop_lut6_I3_O)        0.124    17.133 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5/O
+                         net (fo=24, routed)          0.726    17.859    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_5_n_0
+    SLICE_X56Y113        LUT2 (Prop_lut2_I1_O)        0.124    17.983 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[0]_i_12/O
+                         net (fo=3, routed)           0.905    18.888    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[0]_i_12_n_0
+    SLICE_X54Y115        LUT6 (Prop_lut6_I1_O)        0.124    19.012 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_16/O
+                         net (fo=3, routed)           0.695    19.707    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_16_n_0
+    SLICE_X54Y115        LUT6 (Prop_lut6_I2_O)        0.124    19.831 f  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_6/O
+                         net (fo=7, routed)           0.553    20.384    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/dispatch_pointer_q[1]_i_6_n_0
+    SLICE_X53Y114        LUT5 (Prop_lut5_I1_O)        0.124    20.508 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[2]_i_5/O
+                         net (fo=1, routed)           0.437    20.945    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[2]_i_5_n_0
+    SLICE_X53Y115        LUT6 (Prop_lut6_I4_O)        0.124    21.069 r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[2]_i_1/O
+                         net (fo=1, routed)           0.000    21.069    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q[2]_i_1_n_0
+    SLICE_X53Y115        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[2]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_xlnx_clk_gen rise edge)
+                                                     25.000    25.000 r  
+    K17                                               0.000    25.000 r  clk_sys (IN)
+                         net (fo=0)                   0.000    25.000    i_xlnx_clk_gen/inst/clk_in1
+    K17                  IBUF (Prop_ibuf_I_O)         1.404    26.404 r  i_xlnx_clk_gen/inst/clkin1_ibufg/O
+                         net (fo=1, routed)           1.162    27.566    i_xlnx_clk_gen/inst/clk_in1_xlnx_clk_gen
+    MMCME2_ADV_X1Y2      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.814    19.752 r  i_xlnx_clk_gen/inst/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, routed)           2.012    21.764    i_xlnx_clk_gen/inst/clk_out1_xlnx_clk_gen
+    BUFGCTRL_X0Y16       BUFG (Prop_bufg_I_O)         0.091    21.855 r  i_xlnx_clk_gen/inst/clkout1_buf/O
+                         net (fo=21301, routed)       1.634    23.489    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/clk_out1
+    SLICE_X53Y115        FDPE                                         r  i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[2]/C
+                         clock pessimism              0.484    23.973    
+                         clock uncertainty           -2.082    21.891    
+    SLICE_X53Y115        FDPE (Setup_fdpe_C_D)        0.029    21.920    i_ariane/i_cva6/issue_stage_i/i_lsq_bypass/free_q_reg[2]
+  -------------------------------------------------------------------
+                         required time                         21.920    
+                         arrival time                         -21.069    
+  -------------------------------------------------------------------
+                         slack                                  0.851    
+
+
+
+

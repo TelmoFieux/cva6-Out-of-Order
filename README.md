@@ -1,3 +1,93 @@
+# CVA6 Out-of-Order
+
+This repository is a fork of the original [CVA6](https://github.com/openhwgroup/cva6), used in
+bare-metal 32-bit mode. It contains a modified version of the core turned into an out-of-order
+core that works both in superscalar (dual-issue) and in single-issue configuration. It passes the
+`riscv-tests` ISA suites rv32ui, rv32um and rv32uc (including `fence.i`) in both configurations.
+
+This work was carried out by Telmo Fieux as the final project of a Master's degree at Université
+Toulouse III – Paul Sabatier. The new code is released under the same licence as the original
+CVA6 repository (Solderpad Hardware License).
+
+
+## Results
+
+Summary of the results on a Digilent Zybo Z7-20 (Zynq-7020) for the main configurations, taking
+into account LUT usage and maximum clock frequency. Several configurations were explored, but the
+dual-issue ROB16 version is the best-performing one and the main focus of this work: most
+comparisons refer to it. IPC and speed-ups are measured on the board; speed-ups are relative to
+the original CVA6 (geometric mean over FFT, MNIST and CoreMark).
+
+| Configuration                                | Core LUTs | F<sub>max</sub> (MHz) |   FFT IPC | MNIST IPC | CoreMark IPC | CoreMark/MHz | Speed-up (cycles) | Speed-up (time at F<sub>max</sub>) |
+| -------------------------------------------- | --------: | --------------------: | --------: | --------: | -----------: | -----------: | ----------------: | ---------------------------------: |
+| Original CVA6 (in-order, single issue, SB16) |    14 381 |                  49.7 |     0.770 |     0.654 |        0.699 |         2.55 |             1.00× |                              1.00× |
+| In-order, dual issue, SB8                    |    18 410 |                  53.2 |     0.949 |     0.873 |        0.865 |         3.15 |             1.27× |                              1.36× |
+| In-order, dual issue, SB16                   |    23 269 |                  42.5 |     0.948 |     0.874 |        0.866 |         3.15 |             1.27× |                              1.08× |
+| **Out-of-order, single issue, ROB16**        |    21 838 |                  44.6 |     0.837 |     0.891 |        0.779 |         2.84 |             1.18× |                              1.06× |
+| **Out-of-order, dual issue, ROB16**          |    33 794 |                  42.2 | **1.101** | **1.415** |    **1.064** |     **3.87** |         **1.68×** |                          **1.42×** |
+
+SB: scoreboard entries (in-order); ROB: reorder buffer entries (out-of-order). F<sub>max</sub> comes
+from an out-of-context place and route of the core.
+
+In short, compared with the dual-issue in-order core:
+
+- at equal frequency, the dual-issue OoO core is 32 % faster on average (geometric mean of the
+  three benchmarks);
+- with each core at its own F<sub>max</sub>, it is only 5 % faster than the fastest in-order
+  configuration (SB8), because the out-of-order logic lowers the maximum frequency on FPGA;
+- on a memory-bound micro-benchmark with independent cache misses (`membench`), it is 62 %
+  faster at equal frequency and 28 % faster at F<sub>max</sub>, because it overlaps several
+  cache misses. When each miss depends on the previous one (pointer chasing), there is no gain.
+
+
+
+### Paper and raw data
+
+The [`Artefacts`](./Artefacts/) folder contains:
+
+- [`CVA6_Out_of_Order_Paper.pdf`](./Artefacts/CVA6_Out_of_Order_Paper.pdf) : the **paper** describing the architecture in detail, the measurement method and an extensive
+  analysis of the bottlenecks and limits of this design;
+- [`fpga_results.md`](./Artefacts/Results/fpga_results.md): all synthesis results and on-board runs;
+- [`simulation_results.md`](./Artefacts/Results/simulation_results.md): all simulation counters.
+
+### Reproducing the results
+
+The build, simulation and synthesis flows are unchanged: follow the original CVA6 README below.
+One benchmark was added to measure the impact of cache misses: `membench`
+(`sw/app/membench`).
+
+## The Issue Stage
+
+Most of the modifications are in the issue stage and in the execute stage (more precisely, the
+load/store unit). The issue stage has a new instruction flow, with a register allocation table,
+several reservation stations and other new modules. The new instruction flow is summarised in
+the following diagram:
+
+![Issue stage instruction flow](./Artefacts/Issue_stage_edited.png)
+
+## Load/Store Unit
+
+The LSU now has a load/store queue, which takes over part of the work of the former load and
+store units and checks the dependencies between memory operations. A simplified view of the new
+instruction flow is shown below:
+
+![Load/store unit instruction flow](./Artefacts/lsu_OoO.png)
+
+## Known Issues
+
+Some features have not been tested and probably no longer work:
+
+- atomic operations (A extension) are not supported: they are disabled in the configuration and
+  trap as illegal instructions;
+- the MMU configuration has not been tested;
+- the FPU, CV-X-IF and accelerator interfaces are not supported.
+
+These features would probably require only small modifications to work again.
+
+# Original Repository README
+
+# Original repository README
+
 # Getting started
 
 To get more familiar with CVA6 architecture, a partial documentation is available:
@@ -12,7 +102,7 @@ git submodule update --init --recursive
 
 Do not forget to check all the details of the contest in [Annonce RISC-V contest 2025-2026.pdf](./Annonce_RISC-V_contest_2025-2026_v1.3.pdf).
 
-This repository contains the files needed for the 2025-2026 contest focusing on fast fourier transform computation. The goal is to modify the CV32A6 architecture and/or add a coprocessor to accelerate the FFT algorithm provided as an 
+This repository contains the files needed for the 2025-2026 contest focusing on fast fourier transform computation. The goal is to modify the CV32A6 architecture and/or add a coprocessor to accelerate the FFT algorithm provided as an
 application written in C.
 
 # Prerequisites
@@ -23,7 +113,7 @@ Questa Prime **version 10.7** must be used to measure power during the simulatio
 Other simulation tools and versions will receive no support from the organization team.
 
 ## Vitis/Vivado setting up
-For the contest, the CVA6 processor will be implemented on Zybo Z7-20 board from Digilent. This board integrates a Zynq 7000 FPGA from Xilinx. 
+For the contest, the CVA6 processor will be implemented on Zybo Z7-20 board from Digilent. This board integrates a Zynq 7000 FPGA from Xilinx.
 To do so, **Vitis 2024.1** environment from Xilinx needs to be installed.
 
 Furthermore, Digilent provides board files for each development board.
@@ -37,7 +127,7 @@ https://reference.digilentinc.com/reference/programmable-logic/guides/installati
 
 
 
-## Hardware 
+## Hardware
 If you have not yet done so, start provisioning the following:
 
 | Reference	                 | URL                                                                             |	List price |	Remark                            |
@@ -201,7 +291,7 @@ Transfer rate: 51 KB/sec, 6669 bytes/write.
 ```
 (gdb) c
 Continuing.
-(gdb) 
+(gdb)
 ```
 
 1. On the hyperterminal, you should see:
